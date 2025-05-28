@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { auth, logout } from "../firebase"; // Importa il logout
+import { auth, logout } from "../firebase/firebase"; // Importa il logout
 import { onAuthStateChanged } from "firebase/auth";
 import { useState, useEffect } from "react";
 
@@ -30,16 +30,17 @@ const Navbar = () => {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container">
-        <Link className="navbar-brand" to="/">Habit Tracker</Link>
-        <Link className="btn btn-primary" to="/create">Crea Habit</Link>
+        <Link className="navbar-brand" to="/">
+          Habit Tracker
+        </Link>
+        <Link className="btn btn-primary" to="/create">
+          Crea Habit
+        </Link>
         <div className="d-flex">
           {user ? (
             <>
               <span className="navbar-text me-3">Ciao, {user.email}</span>
-              <button
-                className="btn btn-outline-danger"
-                onClick={handleLogout}
-              >
+              <button className="btn btn-outline-danger" onClick={handleLogout}>
                 Logout
               </button>
             </>

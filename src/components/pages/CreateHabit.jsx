@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { db, auth } from "../firebase"; // Importa Firebase config
+import { db, auth } from "../../firebase/firebase"; // Importa Firebase config
 import { collection, addDoc } from "firebase/firestore";
 
 const CreateHabit = () => {
@@ -45,14 +45,26 @@ const CreateHabit = () => {
   return (
     <div className="container mt-5">
       <h1 className="mb-4">Crea un nuovo Habit</h1>
-      {error && <div className="alert alert-danger alert-dismissible">
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        {error}
-      </div>}
-      {success && <div className="alert alert-success alert-dismissible">
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        {success}
-        </div>}
+      {error && (
+        <div className="alert alert-danger alert-dismissible">
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+          ></button>
+          {error}
+        </div>
+      )}
+      {success && (
+        <div className="alert alert-success alert-dismissible">
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+          ></button>
+          {success}
+        </div>
+      )}
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label className="form-label">Nome dell'Habit</label>

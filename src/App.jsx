@@ -1,27 +1,39 @@
-import './App.css'
+import "./App.css";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import { Button } from 'react-bootstrap'
-import app from './firebase'
-import Auth from './pages/Auth';
-import HabitList from './pages/HabitList';
-import CreateHabit from './pages/CreateHabit';
-import PrivateRoute from './components/PrivateRoute';
-import Navbar from './components/Navbar';
-
+import AuthPage from "./components/pages/AuthPage/AuthPage";
+import HabitList from "./components/pages/HabitList";
+import CreateHabit from "./components/pages/CreateHabit";
+import PrivateRoute from "./components/route/PrivateRoute";
+import PublicRoute from "./components/route/PublicRoute";
+import Navbar from "./components/Navbar";
+import NavbarLayout from "./components/page layout/NavbarLayout";
 
 function App() {
-  console.log("Firebase app initialized:", app);
-
   return (
     <Router>
-      <Navbar/>
       <Routes>
-        <Route path="/auth" element={<Auth />} />
-        <Route path="/" element={<PrivateRoute><HabitList/></PrivateRoute>}/>
-        <Route path="/create" element={<PrivateRoute><CreateHabit/></PrivateRoute>}/>
+        <Route
+          path="/auth"
+          element={
+            <PublicRoute>
+              <AuthPage />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/"
+          element={
+            <PrivateRoute>
+              <NavbarLayout />
+            </PrivateRoute>
+          }
+        >
+          <Route index element={<HabitList />} />
+          <Route path="create" element={<CreateHabit />} />
+        </Route>
       </Routes>
     </Router>
   );
-};
+}
 
 export default App;

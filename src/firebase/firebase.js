@@ -1,5 +1,9 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import {
+  initializeFirestore,
+  persistentLocalCache,
+  persistentMultipleTabManager,
+} from "firebase/firestore";
 import { getAuth, signOut } from "firebase/auth";
 
 const firebaseConfig = {
@@ -8,18 +12,21 @@ const firebaseConfig = {
   projectId: "looply-281b4",
   storageBucket: "looply-281b4.firebasestorage.app",
   messagingSenderId: "1094526595841",
-  appId: "1:1094526595841:web:a23d4f7cf1032ccdfb2100"
+  appId: "1:1094526595841:web:a23d4f7cf1032ccdfb2100",
 };
 
 const app = initializeApp(firebaseConfig);
 
-// Inizializza Firestore e Auth
-export const db = getFirestore(app);
-export const auth = getAuth(app);
+const db = initializeFirestore(app, {
+  localCache: persistentLocalCache({
+    tabManager: persistentMultipleTabManager(),
+  }),
+});
+const auth = getAuth(app);
 
-export const logout = () => {
+const logout = () => {
   const auth = getAuth();
   return signOut(auth);
 };
 
-export default app;
+export { db, auth, app, logout };

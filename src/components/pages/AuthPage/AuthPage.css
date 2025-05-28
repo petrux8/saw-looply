@@ -1,0 +1,42 @@
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #ececec;
+}
+
+.app-logo {
+  width: 400px;
+  height: auto;
+}
+
+.auth-left {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background: lightblue;
+}
+
+.auth-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 40px 30px 40px 40px;
+}
+
+
+@media only screen and (max-width: 768px){
+     .box-area{
+        margin: 0 10px;
+     }
+     .auth-left{
+        height: 100px;
+        overflow: hidden;
+     }
+     .auth-right{
+        padding: 20px;
+     }
+}
