@@ -83,7 +83,7 @@ const AuthPage = () => {
           </div>
 
           <div className="col-md-6 auth-right">
-            <div class="row align-items-center">
+            <div className="row align-items-center">
               <h2>{authType === "login" ? "Hello, Again" : "Welcome"}</h2>
               <p>
                 {authType === "login"
