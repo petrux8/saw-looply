@@ -1,15 +1,28 @@
 .auth-container {
+  background-color: #ececec;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  background: #ececec;
+  height: 100vh;
+}
+
+.box-container {
+  width: 90%;
+  max-width: 900px;
+  overflow: hidden;
 }
 
 .app-logo {
   width: 400px;
   height: auto;
+}
+
+.auth-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 40px;
 }
 
 .auth-left {
@@ -20,24 +33,18 @@
   background: lightblue;
 }
 
-.auth-right {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  padding: 40px 30px 40px 40px;
-}
-
-
-@media only screen and (max-width: 768px){
-     .box-area{
-        margin: 0 10px;
-     }
-     .auth-left{
-        height: 100px;
-        overflow: hidden;
-     }
-     .auth-right{
-        padding: 20px;
-     }
+@media only screen and (max-width: 768px) {
+  .box-container {
+    margin: 20px;
+  }
+  .auth-left {
+    height: 100px;
+    overflow: hidden;
+  }
+  .auth-right {
+    padding: 20px;
+  }
+  .app-logo {
+    padding: 70px;
+  }
 }
