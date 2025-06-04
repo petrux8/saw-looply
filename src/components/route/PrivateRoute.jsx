@@ -1,8 +1,8 @@
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useFirebaseAuth } from "../../context/FirebaseAuthContext";
 
 const PrivateRoute = ({ children }) => {
-  const { currentUser } = useAuth();
+  const { currentUser } = useFirebaseAuth();
 
   return currentUser ? children : <Navigate to="/auth" />;
 };

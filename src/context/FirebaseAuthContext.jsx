@@ -2,9 +2,9 @@ import { createContext, useState, useContext, useEffect } from "react";
 import { auth } from "../firebase/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
-export const AuthContext = createContext();
+export const FirebaseAuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
+export const FirebaseAuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -17,12 +17,22 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ currentUser }}>
+    <FirebaseAuthContext.Provider value={{ currentUser }}>
       {!loading && children}
-    </AuthContext.Provider>
+    </FirebaseAuthContext.Provider>
   );
 };
 
 export const useAuth = () => {
-  return useContext(AuthContext);
+  return useContext(FirebaseAuthContext);
 };
+
+export function useFirebaseAuth() {
+  const context = useContext(FirebaseAuthContext);
+  if (context === undefined) {
+    throw new Error(
+      "useFirebaseAuth must be used within a FirebaseAuthProvider"
+    );
+  }
+  return context;
+}

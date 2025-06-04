@@ -24,9 +24,4 @@ const db = initializeFirestore(app, {
 });
 const auth = getAuth(app);
 
-const logout = () => {
-  const auth = getAuth();
-  return signOut(auth);
-};
-
-export { db, auth, app, logout };
+export { db, auth, app };

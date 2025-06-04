@@ -5,8 +5,7 @@ import HabitList from "./components/pages/HabitList";
 import CreateHabit from "./components/pages/CreateHabitPage";
 import PrivateRoute from "./components/route/PrivateRoute";
 import PublicRoute from "./components/route/PublicRoute";
-import Navbar from "./components/Navbar";
-import NavbarLayout from "./components/page layout/NavbarLayout";
+import NavbarLayout from "./components/page layout/MainLayout";
 
 function App() {
   return (

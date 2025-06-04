@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import Alert from "../../Alert";
 import { useState } from "react";
 import { GoogleLoginButton } from "./GoogleLoginButton";
+import { FirebaseError } from "firebase/app";
+import { generateFirebaseAuthAlertMessage } from "../../../firebase/ErrorHandler";
 
 export default function AuthPage() {
   const [authType, setAuthType] = useState("login");
@@ -31,11 +33,10 @@ export default function AuthPage() {
       setSuccess("Login effettuato con successo!");
       setTimeout(() => navigate("/"), 2000);
     } catch (err) {
-      setError(
-        err.message.includes("user-not-found")
-          ? "Utente non trovato. Controlla le credenziali."
-          : "Errore durante il login: " + err.message
-      );
+      if (err instanceof FirebaseError) {
+        generateFirebaseAuthAlertMessage(err);
+      }
+      setError(generateFirebaseAuthAlertMessage(err));
     }
   };
 
@@ -62,13 +63,10 @@ export default function AuthPage() {
       setSuccess("Registrazione completata con successo!");
       setTimeout(() => navigate("/"), 2000);
     } catch (err) {
-      setError(
-        err.message.includes("email-already-in-use")
-          ? "Questa email è già in uso. Prova a eseguire il login."
-          : err.message.includes("weak-password")
-          ? "La password è troppo debole. Usa almeno 6 caratteri."
-          : "Errore durante la registrazione: " + err.message
-      );
+      if (err instanceof FirebaseError) {
+        generateFirebaseAuthAlertMessage(err);
+      }
+      setError(generateFirebaseAuthAlertMessage(err));
     }
   };
 
@@ -88,7 +86,12 @@ export default function AuthPage() {
               ? "We are happy to have you back."
               : "Create your account to get started."}
           </p>
-
+          <Alert message={error} type="error" onClose={() => setError("")} />
+          <Alert
+            message={success}
+            type="success"
+            onClose={() => setSuccess("")}
+          />
           <form onSubmit={authType === "login" ? handleLogin : handleRegister}>
             <div className="mb-3">
               <label htmlFor="email" className="form-label">
@@ -116,15 +119,19 @@ export default function AuthPage() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            {authType === "login" && (
+            {/* {authType === "login" && (
               <div className="d-flex justify-content-between align-items-center mb-3">
                 <a href="#" className="text-primary">
                   Forgot Password?
                 </a>
               </div>
-            )}
-            <button type="submit" className="btn btn-primary w-100 mb-3">
-              {authType === "login" ? "Login" : "Sign Up"}
+            )} */}
+            <button
+              type="submit"
+              className="btn btn-primary w-100 mb-3"
+              style={{ minWidth: "150px" }}
+            >
+              {authType === "login" ? "Login" : "Sign In"}
             </button>
             <GoogleLoginButton
               authType={authType}

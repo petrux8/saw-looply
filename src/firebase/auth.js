@@ -6,7 +6,7 @@ import {
   sendPasswordResetEmail,
   sendEmailVerification,
   updatePassword,
-  signOut
+  signOut,
 } from "firebase/auth";
 import { auth } from "./firebase";
 
@@ -42,5 +42,5 @@ export const doSendEmailVerification = () => {
 };
 
 export const logout = async () => {
-    return signOut(auth);
-  };
+  return signOut(auth);
+};

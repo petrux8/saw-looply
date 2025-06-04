@@ -50,9 +50,15 @@ const HabitList = () => {
     );
   };
 
-  if (loading) {
-    return <div>Caricamento in corso...</div>;
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="d-flex justify-content-center align-items-center vh-100">
+  //       <div className="spinner-border text-primary" role="status">
+  //         <span className="visually-hidden">Caricamento...</span>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="container mt-5">
@@ -60,50 +66,48 @@ const HabitList = () => {
       {habits.length === 0 && <p>Non hai ancora creato nessun habit.</p>}
       <ul className="list-group">
         {habits.map((habit) => {
+          let habitComponent = null;
           switch (habit.type) {
             case "binary":
-              return (
-                <li
+              habitComponent = (
+                <BinaryHabit
                   key={habit.id}
-                  className="list-group-item  d-flex justify-content-between align-items-center"
-                >
-                  <h5>{habit.name}</h5>
-                  <BinaryHabit
-                    key={habit.id}
-                    habit={habit}
-                    onToggleCompletion={onToggleCompletion}
-                  />
-                </li>
+                  habit={habit}
+                  onToggleCompletion={onToggleCompletion}
+                />
               );
+              break;
             case "rating":
-              return (
-                <li
+              habitComponent = (
+                <RatingHabit
                   key={habit.id}
-                  className="list-group-item  d-flex justify-content-between align-items-center"
-                >
-                  <h5>{habit.name}</h5>
-                  <RatingHabit
-                    key={habit.id}
-                    habit={habit}
-                    onUpdateRating={onUpdateRating}
-                  />
-                </li>
+                  habit={habit}
+                  onUpdateRating={onUpdateRating}
+                />
               );
+              break;
             case "quantitative":
-              return (
-                <li
+              habitComponent = (
+                <QuantityHabit
                   key={habit.id}
-                  className="list-group-item  d-flex justify-content-between align-items-center"
-                >
-                  <h5>{habit.name}</h5>
-                  <QuantityHabit
-                    key={habit.id}
-                    habit={habit}
-                    onUpdateProgress={onUpdateProgress}
-                  />
-                </li>
+                  habit={habit}
+                  onUpdateProgress={onUpdateProgress}
+                />
               );
+              break;
+            default:
+              return null; // Gestione di tipi sconosciuti
           }
+
+          return (
+            <li
+              key={habit.id}
+              className="list-group-item d-flex justify-content-between align-items-center"
+            >
+              <h5>{habit.name}</h5>
+              {habitComponent}
+            </li>
+          );
         })}
       </ul>
     </div>
