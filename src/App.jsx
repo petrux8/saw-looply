@@ -2,7 +2,7 @@ import "./App.css";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import AuthPage from "./components/pages/AuthPage/AuthPage";
 import HabitListPage from "./components/pages/HabitListPage";
-import CreateHabit from "./components/pages/CreateHabitPage";
+import CreateHabit from "./components/pages/create-habit/CreateHabitPage";
 import PrivateRoute from "./components/route/PrivateRoute";
 import PublicRoute from "./components/route/PublicRoute";
 import MainLayout from "./components/nav/MainLayout";

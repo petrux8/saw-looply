@@ -1,56 +1,50 @@
-import React, { useState } from "react";
-import { db, auth } from "../../firebase/firebase"; // Importa Firebase config
-import { collection, addDoc, doc, setDoc } from "firebase/firestore";
-import Alert from "../Alert";
-import { ButtonGroup, ToggleButton, ToggleButtonGroup } from "react-bootstrap";
+import React, { useReducer, useState } from "react";
+import Alert from "../../Alert";
+import FrequencyPicker from "../habit/FrequencyPicker";
+import { useFirebaseAuth } from "../../../context/FirebaseAuthContext";
+import HabitTypeFields from "./HabitTypeFields";
+import { createHabit } from "../../../service/habitService";
+
+const initialHabitState = {
+  habitName: "",
+  habitType: "binary",
+  habitTarget: 0,
+  habitUnit: "",
+  habitStartRange: 1,
+  habitEndRange: 5,
+  habitFreq: "daily",
+  habitDays: [],
+};
+
+function reducer(state, action) {
+  switch (action.name) {
+    case "reset":
+      return { ...action.value };
+    default:
+      return { ...state, [action.name]: action.value }; 
+  }
+}
 
 const CreateHabitPage = () => {
-  const [habitName, setHabitName] = useState("");
-  const [habitType, setHabitType] = useState("binary");
-  const [habitTarget, setHabitTarget] = useState(0);
-  const [habitUnit, setHabitUnit] = useState("");
-  const [habitStartRange, setHabitStartRange] = useState(1);
-  const [habitEndRange, setHabitEndRange] = useState(5);
-  const [habitFreq, setHabitFreq] = useState("daily");
-  const [habitDays, setHabitDays] = useState([]);
+  const [state, dispatch] = useReducer(reducer, initialHabitState);
+  const { currentUser } = useFirebaseAuth();
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
-  const repeatRadios = [
-    { name: "Daily", value: "daily" },
-    { name: "Weekly", value: "weekly" },
-  ];
-
-  const daysRadios = [
-    { name: "Mon", value: "Mon" },
-    { name: "Tue", value: "Tue" },
-    { name: "Wed", value: "Wed" },
-    { name: "Thu", value: "Thu" },
-    { name: "Fri", value: "Fri" },
-    { name: "Sat", value: "Sat" },
-    { name: "Sun", value: "Sun" },
-  ];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setSuccess("");
-
-    if (!habitName) {
-      setError("Il nome dell'habit è obbligatorio.");
-      return;
-    }
+    const { habitName, habitType, habitFreq, habitDays, ...rest } = state;
 
     try {
-      const user = auth.currentUser; // Ottieni l'utente autenticato
-
       //todo tutti i controlli del caso
 
       // Creare il nuovo habit
       const baseHabit = {
         id: Date.now().toString(),
-        userId: user.uid,
+        userId: currentUser.uid,
         name: habitName,
         type: habitType,
         createdAt: new Date(),
@@ -60,27 +54,16 @@ const CreateHabitPage = () => {
       };
 
       const newHabit =
-        habitType === "rating"
+        habitType !== "binary"
           ? {
               ...baseHabit,
-              startRange: habitStartRange,
-              endRange: habitEndRange,
-              value: habitStartRange,
+              ...rest,
             }
-          : habitType === "quantitative"
-          ? { ...baseHabit, target: habitTarget, unit: habitUnit, value: 0 }
           : { ...baseHabit };
 
-      await setDoc(doc(db, "habits", newHabit.id), { ...newHabit });
+      createHabit(currentUser.uid, newHabit);
 
-      setHabitName("");
-      setHabitTarget(0);
-      setHabitType("binary");
-      setHabitUnit("");
-      setHabitStartRange("1");
-      setHabitEndRange("5");
-      setHabitFreq("daily");
-      setHabitDays([]);
+      dispatch({ name: "reset", value: initialHabitState });
       setSuccess("Habit creato con successo!");
     } catch (err) {
       console.error(err);
@@ -103,8 +86,10 @@ const CreateHabitPage = () => {
           <input
             type="text"
             className="form-control"
-            value={habitName}
-            onChange={(e) => setHabitName(e.target.value)}
+            value={state.habitName}
+            onChange={(e) =>
+              dispatch({ name: "habitName", value: e.target.value })
+            }
             required
           />
         </div>
@@ -113,8 +98,10 @@ const CreateHabitPage = () => {
           <select
             className="form-select"
             id="habitType"
-            value={habitType}
-            onChange={(e) => setHabitType(e.target.value)}
+            value={state.habitType}
+            onChange={(e) =>
+              dispatch({ name: "habitType", value: e.target.value })
+            }
             required
           >
             <option value="binary">Binary Habits (Done/Not done)</option>
@@ -124,7 +111,9 @@ const CreateHabitPage = () => {
             <option value="rating">Rating Habits (e.g., sleep quality)</option>
           </select>
         </div>
-        {habitType === "quantitative" && (
+        <HabitTypeFields state={state} dispatch={dispatch} />
+        <FrequencyPicker state={state} dispatch={dispatch} />
+        {/* {habitType === "quantitative" && (
           <div className="row mb-3">
             <div className="col-md-6">
               <label className="form-label">Target</label>
@@ -170,8 +159,8 @@ const CreateHabitPage = () => {
               />
             </div>
           </div>
-        )}
-        <div className="row mb-3">
+        )} */}
+        {/* <div className="row mb-3">
           <label htmlFor="habitType" className="form-label">
             Repeat
           </label>
@@ -219,7 +208,7 @@ const CreateHabitPage = () => {
               ))}
             </ToggleButtonGroup>
           </div>
-        )}
+        )} */}
         <button type="submit" className="btn btn-primary">
           Salva Habit
         </button>

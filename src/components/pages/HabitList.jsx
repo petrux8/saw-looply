@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import BinaryHabit from "./habit/BinaryHabit";
 import RatingHabit from "./habit/RatingHabit";
 import QuantityHabit from "./habit/QuantityHabit";
@@ -8,11 +8,11 @@ import { updateHabit } from "../../service/habitService";
 export default function HabitList({ currentDate }) {
   const { habits, loading } = useHabits({ currentDate });
 
-  const date = currentDate.toLocaleDateString("en-GB", {
+  const date = useMemo(() =>  currentDate.toLocaleDateString("en-GB", {
     day: "numeric",
     month: "numeric",
     year: "numeric",
-  });
+  }), [currentDate])
 
   if (loading) return <p>Loading...</p>;
 
@@ -36,7 +36,7 @@ export default function HabitList({ currentDate }) {
                       },
                     })
                   }
-                  currentDate={currentDate}
+                  currentDate={date}
                 />
               );
               break;
@@ -53,7 +53,7 @@ export default function HabitList({ currentDate }) {
                       },
                     })
                   }
-                  currentDate={currentDate}
+                  currentDate={date}
                 />
               );
               break;
@@ -70,12 +70,12 @@ export default function HabitList({ currentDate }) {
                       },
                     })
                   }
-                  currentDate={currentDate}
+                  currentDate={date}
                 />
               );
               break;
             default:
-              return null; // Gestione di tipi sconosciuti
+              return null;
           }
 
           return (

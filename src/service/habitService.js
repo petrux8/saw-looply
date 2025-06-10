@@ -11,6 +11,7 @@ import {
   where,
   and,
   or,
+  setDoc,
 } from "firebase/firestore";
 
 const col = collection(db, "habits");
@@ -35,10 +36,9 @@ export const getHabitsQuery = (userId, currentDate) => {
 };
 
 export async function createHabit(userId, data) {
-  const docRef = await addDoc(col, {
+  await setDoc(doc(db, "habits", data.id), {
     ...data,
   });
-  return docRef.id;
 }
 
 export function updateHabit(habitId, updates) {
