@@ -1,6 +1,6 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { logout } from "../firebase/auth";
+import { logout } from "../../firebase/auth";
 
 const linkList = [
   { name: "Habits List", path: "/" },
@@ -8,52 +8,41 @@ const linkList = [
   { name: "Statistics", path: "/stats" },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ isSidebarOpen, onToggle, closeSidebar }) {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
       await logout();
       navigate("/auth");
     } catch (error) {
-      console.log("QUa?")
+      console.log("QUa?");
       console.error("Errore durante il logout:", error);
       setError("Logout fallito. Riprova.");
     }
   };
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
-
   const getLinkClass = (isActive) =>
-    isActive ? "btn btn-primary w-100 mb-2" : "btn btn-outline-primary w-100 mb-2";
+    isActive
+      ? "btn btn-primary w-100 mb-2"
+      : "btn btn-outline-primary w-100 mb-2";
 
   return (
     <>
-      <button
-        className="btn btn-outline-primary d-md-none m-3"
-        onClick={toggleSidebar}
-      >
-        ☰
-      </button>
-
       {/* Sidebar */}
       <div
         className={`d-flex flex-column border-end border-2 vh-100 p-3 bg-white ${
-          isSidebarOpen ? "position-fixed d-block" : "d-none"
+          isSidebarOpen ? "position-fixed top-0 start-0 vh-100" : "d-none"
         } d-md-flex position-static`}
         style={{ width: "350px", zIndex: "1050" }}
       >
-        
-      <button
-        className="btn btn-outline-primary d-md-none m-3"
-        onClick={toggleSidebar}
-      >
-        ☰
-      </button>
+        <button
+          className="btn btn-outline-primary d-md-none m-3"
+          onClick={onToggle}
+        >
+          ☰
+        </button>
         {/* Logo */}
         <div className="text-center mb-4">
           <img
@@ -75,7 +64,7 @@ export default function Sidebar() {
               key={link.path}
               to={link.path}
               className={({ isActive }) => getLinkClass(isActive)}
-              onClick={() => setIsSidebarOpen(false)} // Chiudi la sidebar quando un link è cliccato
+              onClick={closeSidebar} // Chiudi la sidebar quando un link è cliccato
             >
               {link.name}
             </NavLink>
@@ -98,7 +87,7 @@ export default function Sidebar() {
       {isSidebarOpen && (
         <div
           className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50"
-          onClick={toggleSidebar}
+          onClick={onToggle}
           style={{ zIndex: "1040" }}
         ></div>
       )}

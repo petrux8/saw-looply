@@ -1,68 +1,23 @@
-import React, { useEffect, useState } from "react";
-import { db, auth } from "../../firebase/firebase";
-import { collection, query, where, onSnapshot } from "firebase/firestore";
+import React, { useState, useEffect } from "react";
 import BinaryHabit from "./habit/BinaryHabit";
 import RatingHabit from "./habit/RatingHabit";
 import QuantityHabit from "./habit/QuantityHabit";
+import { useHabits } from "../../hook/useHabit";
+import { updateHabit } from "../../service/habitService";
 
-const HabitList = () => {
-  const [habits, setHabits] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function HabitList({ currentDate }) {
+  const { habits, loading } = useHabits({ currentDate });
 
-  useEffect(() => {
-    const user = auth.currentUser;
-    if (!user) return;
+  const date = currentDate.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "numeric",
+    year: "numeric",
+  });
 
-    const q = query(collection(db, "habits"), where("userId", "==", user.uid));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const habitList = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setHabits(habitList);
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  const onToggleCompletion = (habitId) => {
-    setHabits((prevHabits) =>
-      prevHabits.map((habit) =>
-        habit.id === habitId ? { ...habit, completed: !habit.completed } : habit
-      )
-    );
-  };
-
-  const onUpdateProgress = (habitId, value) => {
-    setHabits((prevHabits) =>
-      prevHabits.map((habit) =>
-        habit.id === habitId ? { ...habit, value: parseInt(value, 10) } : habit
-      )
-    );
-  };
-
-  const onUpdateRating = (habitId, value) => {
-    setHabits((prevHabits) =>
-      prevHabits.map((habit) =>
-        habit.id === habitId ? { ...habit, value: parseInt(value, 10) } : habit
-      )
-    );
-  };
-
-  // if (loading) {
-  //   return (
-  //     <div className="d-flex justify-content-center align-items-center vh-100">
-  //       <div className="spinner-border text-primary" role="status">
-  //         <span className="visually-hidden">Caricamento...</span>
-  //       </div>
-  //     </div>
-  //   );
-  // }
+  if (loading) return <p>Loading...</p>;
 
   return (
-    <div className="container mt-5">
-      <h1>I tuoi Habits</h1>
+    <>
       {habits.length === 0 && <p>Non hai ancora creato nessun habit.</p>}
       <ul className="list-group">
         {habits.map((habit) => {
@@ -73,7 +28,15 @@ const HabitList = () => {
                 <BinaryHabit
                   key={habit.id}
                   habit={habit}
-                  onToggleCompletion={onToggleCompletion}
+                  onToggleCompletion={() =>
+                    updateHabit(habit.id, {
+                      history: {
+                        ...habit.history,
+                        [date]: !habit.history[date],
+                      },
+                    })
+                  }
+                  currentDate={currentDate}
                 />
               );
               break;
@@ -82,7 +45,15 @@ const HabitList = () => {
                 <RatingHabit
                   key={habit.id}
                   habit={habit}
-                  onUpdateRating={onUpdateRating}
+                  onUpdateRating={(value) =>
+                    updateHabit(habit.id, {
+                      history: {
+                        ...habit.history,
+                        [date]: value,
+                      },
+                    })
+                  }
+                  currentDate={currentDate}
                 />
               );
               break;
@@ -91,7 +62,15 @@ const HabitList = () => {
                 <QuantityHabit
                   key={habit.id}
                   habit={habit}
-                  onUpdateProgress={onUpdateProgress}
+                  onUpdateProgress={(value) =>
+                    updateHabit(habit.id, {
+                      history: {
+                        ...habit.history,
+                        [date]: value,
+                      },
+                    })
+                  }
+                  currentDate={currentDate}
                 />
               );
               break;
@@ -110,8 +89,6 @@ const HabitList = () => {
           );
         })}
       </ul>
-    </div>
+    </>
   );
-};
-
-export default HabitList;
+}

@@ -1,11 +1,12 @@
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import AuthPage from "./components/pages/AuthPage/AuthPage";
-import HabitList from "./components/pages/HabitList";
+import HabitListPage from "./components/pages/HabitListPage";
 import CreateHabit from "./components/pages/CreateHabitPage";
 import PrivateRoute from "./components/route/PrivateRoute";
 import PublicRoute from "./components/route/PublicRoute";
-import NavbarLayout from "./components/page layout/MainLayout";
+import MainLayout from "./components/nav/MainLayout";
+import StatsPage from "./components/pages/StatsPage";
 
 function App() {
   return (
@@ -23,12 +24,13 @@ function App() {
           path="/"
           element={
             <PrivateRoute>
-              <NavbarLayout />
+              <MainLayout />
             </PrivateRoute>
           }
         >
-          <Route index element={<HabitList />} />
+          <Route index element={<HabitListPage />} />
           <Route path="create" element={<CreateHabit />} />
+          <Route path="stats" element={<StatsPage />} />
         </Route>
       </Routes>
     </Router>

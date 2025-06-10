@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { db, auth } from "../../firebase/firebase"; // Importa Firebase config
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, doc, setDoc } from "firebase/firestore";
 import Alert from "../Alert";
+import { ButtonGroup, ToggleButton, ToggleButtonGroup } from "react-bootstrap";
 
 const CreateHabitPage = () => {
   const [habitName, setHabitName] = useState("");
@@ -10,9 +11,26 @@ const CreateHabitPage = () => {
   const [habitUnit, setHabitUnit] = useState("");
   const [habitStartRange, setHabitStartRange] = useState(1);
   const [habitEndRange, setHabitEndRange] = useState(5);
+  const [habitFreq, setHabitFreq] = useState("daily");
+  const [habitDays, setHabitDays] = useState([]);
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+  const repeatRadios = [
+    { name: "Daily", value: "daily" },
+    { name: "Weekly", value: "weekly" },
+  ];
+
+  const daysRadios = [
+    { name: "Mon", value: "Mon" },
+    { name: "Tue", value: "Tue" },
+    { name: "Wed", value: "Wed" },
+    { name: "Thu", value: "Thu" },
+    { name: "Fri", value: "Fri" },
+    { name: "Sat", value: "Sat" },
+    { name: "Sun", value: "Sun" },
+  ];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,21 +54,24 @@ const CreateHabitPage = () => {
         name: habitName,
         type: habitType,
         createdAt: new Date(),
+        repeat: habitFreq,
+        days: habitDays,
+        history: {},
       };
 
       const newHabit =
-        habitType === "binary"
-          ? { ...baseHabit, isCompleted: false }
-          : habitType === "rating"
+        habitType === "rating"
           ? {
               ...baseHabit,
               startRange: habitStartRange,
               endRange: habitEndRange,
               value: habitStartRange,
             }
-          : { ...baseHabit, target: habitTarget, unit: habitUnit, value: 0 };
+          : habitType === "quantitative"
+          ? { ...baseHabit, target: habitTarget, unit: habitUnit, value: 0 }
+          : { ...baseHabit };
 
-      await addDoc(collection(db, "habits"), { ...newHabit });
+      await setDoc(doc(db, "habits", newHabit.id), { ...newHabit });
 
       setHabitName("");
       setHabitTarget(0);
@@ -58,11 +79,17 @@ const CreateHabitPage = () => {
       setHabitUnit("");
       setHabitStartRange("1");
       setHabitEndRange("5");
+      setHabitFreq("daily");
+      setHabitDays([]);
       setSuccess("Habit creato con successo!");
     } catch (err) {
       console.error(err);
       setError("Errore durante la creazione dell'habit.");
     }
+  };
+
+  const handleDaysToggle = (value) => {
+    setHabitDays(value);
   };
 
   return (
@@ -82,9 +109,7 @@ const CreateHabitPage = () => {
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="habitType" className="form-label">
-            Type
-          </label>
+          <label className="form-label">Type</label>
           <select
             className="form-select"
             id="habitType"
@@ -144,6 +169,55 @@ const CreateHabitPage = () => {
                 required
               />
             </div>
+          </div>
+        )}
+        <div className="row mb-3">
+          <label htmlFor="habitType" className="form-label">
+            Repeat
+          </label>
+          <ButtonGroup className="col-md-4">
+            {repeatRadios.map((repeat, i) => (
+              <ToggleButton
+                key={i}
+                id={`repeatRadio-${i}`}
+                type="radio"
+                variant="outline-primary"
+                name="repeatRadio"
+                value={repeat.value}
+                checked={habitFreq === repeat.value}
+                onChange={(e) => setHabitFreq(e.currentTarget.value)}
+              >
+                {repeat.name}
+              </ToggleButton>
+            ))}
+          </ButtonGroup>
+        </div>
+        {habitFreq === "weekly" && (
+          <div className="row mb-3">
+            <label htmlFor="habitType" className="form-label">
+              Days
+            </label>
+            <ToggleButtonGroup
+              className="col-md-4"
+              type="checkbox"
+              value={habitDays}
+              onChange={handleDaysToggle}
+            >
+              {daysRadios.map((days, i) => (
+                <ToggleButton
+                  key={i}
+                  id={`daysRadio-${i}`}
+                  type="radio"
+                  variant="outline-primary"
+                  name="daysRadio"
+                  value={days.value}
+                  checked={habitDays.includes(days.value)}
+                  onChange={() => handleDaysToggle(days.value)}
+                >
+                  {days.name}
+                </ToggleButton>
+              ))}
+            </ToggleButtonGroup>
           </div>
         )}
         <button type="submit" className="btn btn-primary">

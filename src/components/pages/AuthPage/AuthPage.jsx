@@ -1,4 +1,3 @@
-import "./AuthPage.css"; // File CSS aggiuntivo
 import {
   doCreateUserWithEmailAndPassword,
   doSignInWithEmailAndPassword,
@@ -71,17 +70,25 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="auth-container">
-      <div className="row d-flex rounded-5 shadow-lg box-container">
+    <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
+      <div
+        className="row w-100 mx-0 rounded-5 shadow-lg overflow-hidden"
+        style={{ maxWidth: "900px" }}
+      >
         {/* Sezione Sinistra - Immagine */}
-        <div className="col-md-6 p-4 auth-left">
-          <img src="/logo.png" className="app-logo" alt="logo" />
+        <div className="col-md-6 p-4 d-flex justify-content-center align-items-center bg-primary">
+          <img
+            src="/logo.png"
+            className="img-fluid"
+            alt="logo"
+            style={{ maxWidth: "400px" }}
+          />
         </div>
 
         {/* Sezione Destra - Form di Login */}
-        <div className="col-md-6 p-4 bg-white auth-right">
+        <div className="col-md-6 p-4 bg-white d-flex flex-column align-items-center">
           <h2>{authType === "login" ? "Hello, Again" : "Welcome"}</h2>
-          <p>
+          <p className="text-muted">
             {authType === "login"
               ? "We are happy to have you back."
               : "Create your account to get started."}
@@ -92,7 +99,10 @@ export default function AuthPage() {
             type="success"
             onClose={() => setSuccess("")}
           />
-          <form onSubmit={authType === "login" ? handleLogin : handleRegister}>
+          <form
+            onSubmit={authType === "login" ? handleLogin : handleRegister}
+            className="w-100"
+          >
             <div className="mb-3">
               <label htmlFor="email" className="form-label">
                 Email
@@ -119,19 +129,8 @@ export default function AuthPage() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            {/* {authType === "login" && (
-              <div className="d-flex justify-content-between align-items-center mb-3">
-                <a href="#" className="text-primary">
-                  Forgot Password?
-                </a>
-              </div>
-            )} */}
-            <button
-              type="submit"
-              className="btn btn-primary w-100 mb-3"
-              style={{ minWidth: "150px" }}
-            >
-              {authType === "login" ? "Login" : "Sign In"}
+            <button type="submit" className="btn btn-primary w-100 mb-3">
+              {authType === "login" ? "Login" : "Sign Up"}
             </button>
             <GoogleLoginButton
               authType={authType}
@@ -143,10 +142,7 @@ export default function AuthPage() {
               {authType === "login"
                 ? "Don't have an account? "
                 : "Already have an account? "}
-              <button
-                className="btn btn-link p-0 align-baseline"
-                onClick={handleAuthSwitch}
-              >
+              <button className="btn btn-link p-0" onClick={handleAuthSwitch}>
                 {authType === "login" ? "Sign Up" : "Login"}
               </button>
             </p>
