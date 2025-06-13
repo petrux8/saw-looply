@@ -20,8 +20,6 @@ export default function MyLineChart({ year, month, habit }) {
     }).filter(Boolean);
   };
 
-  console.log(habit.name + " " + habit.target);
-
   const data = getDaysData(year, month);
   return (
     <LineChart

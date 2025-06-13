@@ -23,7 +23,7 @@ const CalendarCard = ({ year, month, habit }) => {
   };
 
   const isDisabled = (day, j) => {
-    return day && !habit.days.includes(daysOfWeek[j]);
+    return habit.freq === "weekly" && day && !habit.days.includes(daysOfWeek[j]);
   };
 
   const calendarDays = [

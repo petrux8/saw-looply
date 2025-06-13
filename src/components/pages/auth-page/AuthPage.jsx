@@ -14,11 +14,10 @@ import { doc, setDoc } from "firebase/firestore";
 export default function AuthPage() {
   const [authType, setAuthType] = useState("login");
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isPswHidden, setPswHidden] = useState(true);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const navigate = useNavigate();
 
   const handleAuthSwitch = () => {
     setAuthType(authType === "login" ? "register" : "login");
@@ -31,12 +30,9 @@ export default function AuthPage() {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
-    setSuccess("");
 
     try {
       await doSignInWithEmailAndPassword(email, password);
-      setSuccess("Login successfull!");
-      setTimeout(() => navigate("/"), 2000);
     } catch (err) {
       if (err instanceof FirebaseError) {
         generateFirebaseAuthAlertMessage(err);
@@ -50,6 +46,11 @@ export default function AuthPage() {
     setError("");
     setSuccess("");
 
+    if (!username) {
+      setError("Username is required!");
+      return;
+    }
+
     try {
       const userCredential = await doCreateUserWithEmailAndPassword(
         email,
@@ -59,11 +60,8 @@ export default function AuthPage() {
 
       await setDoc(doc(db, "users", user.uid), {
         email: user.email,
-        habits: [],
+        username: username,
       });
-
-      setSuccess("Registration completed with success!");
-      setTimeout(() => navigate("/"), 2000);
     } catch (err) {
       if (err instanceof FirebaseError) {
         generateFirebaseAuthAlertMessage(err);
@@ -80,7 +78,7 @@ export default function AuthPage() {
         className="row w-100 mx-0 rounded-5 shadow-lg overflow-hidden"
         style={{ maxWidth: "900px" }}
       >
-        <div className="col-md-6 p-4 d-flex justify-content-center align-items-center bg-primary">
+        <div className="col-md-6 p-5 d-flex justify-content-center align-items-center bg-light">
           <img
             src="/logo.png"
             className="img-fluid"
@@ -89,7 +87,7 @@ export default function AuthPage() {
           />
         </div>
 
-        <div className="col-md-6 p-4 bg-white d-flex flex-column align-items-center">
+        <div className="col-md-6 p-5 bg-white d-flex flex-column align-items-center">
           <h2>{authType === "login" ? "Hello, Again" : "Welcome"}</h2>
           <p className="text-muted">
             {authType === "login"
@@ -97,11 +95,6 @@ export default function AuthPage() {
               : "Create your account to get started."}
           </p>
           <Alert message={error} type="error" onClose={() => setError("")} />
-          <Alert
-            message={success}
-            type="success"
-            onClose={() => setSuccess("")}
-          />
           <form
             onSubmit={authType === "login" ? handleLogin : handleRegister}
             className="w-100"
@@ -115,10 +108,27 @@ export default function AuthPage() {
                 className="form-control"
                 id="email"
                 placeholder="Enter your email"
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
+            {authType !== "login" && (
+              <div className="mb-3">
+                <label htmlFor="email" className="form-label">
+                  Username
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="username"
+                  placeholder="Enter your username"
+                  autoComplete="username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </div>
+            )}
             <div className="mb-3">
               <label htmlFor="password" className="form-label">
                 Password
@@ -129,6 +139,7 @@ export default function AuthPage() {
                   className="form-control"
                   id="password"
                   placeholder="Enter your password"
+                  autoComplete="current-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />

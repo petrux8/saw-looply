@@ -12,7 +12,7 @@ export default function Sidebar({
   isSidebarOpen,
   onToggle,
   closeSidebar,
-  isSmallerThanMd,
+  isSmallerThanLg,
 }) {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
@@ -36,12 +36,12 @@ export default function Sidebar({
     <>
       <div
         className={`d-flex flex-column bg-white vh-100 p-3 position-fixed ${
-          isSmallerThanMd ? (isSidebarOpen ? "top-0 start-0" : "d-none") : ""
+          isSmallerThanLg ? (isSidebarOpen ? "top-0 start-0" : "d-none") : ""
         }`}
         style={{
           width: "350px",
           height: "100vh",
-          zIndex: isSmallerThanMd ? "1050" : "1030",
+          zIndex: isSmallerThanLg ? "1050" : "1030",
         }}
       >
         <div className="text-center mb-4">
@@ -79,7 +79,7 @@ export default function Sidebar({
           Logout
         </button>
       </div>
-      {isSidebarOpen && isSmallerThanMd && (
+      {isSidebarOpen && isSmallerThanLg && (
         <div
           className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50"
           onClick={onToggle}

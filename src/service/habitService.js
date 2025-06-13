@@ -14,7 +14,7 @@ import {
 const getHabitsCollectionRef = (userId) =>
   collection(db, `users/${userId}/habits`);
 
-export const getHabits = (userId, currentDate) => {
+export const getHabitsOfDay = (userId, currentDate) => {
   const weekDay = currentDate.toLocaleDateString("en-GB", {
     weekday: "short",
   });
@@ -36,7 +36,7 @@ export const getHabitByName = (userId, habitName) => {
   return q;
 };
 
-export const getHabitsHistory = (userId) => {
+export const getHabits = (userId) => {
   const habitsCol = getHabitsCollectionRef(userId);
 
   const q = query(habitsCol);
@@ -44,16 +44,27 @@ export const getHabitsHistory = (userId) => {
   return q;
 };
 
+export async function getHabit(userId, data) {
+  await setDoc(doc(db, `users/${userId}/habits`, data.id), {
+    ...data,
+  });
+}
+
 export async function createHabit(userId, data) {
   await setDoc(doc(db, `users/${userId}/habits`, data.id), {
     ...data,
   });
 }
 
-export function updateHabit(habitId, updates) {
+export function updateHabit(habitId, userId, updates) {
   return updateDoc(doc(db, `users/${userId}/habits`, habitId), updates);
 }
 
-export function deleteHabit(habitId) {
-  return deleteDoc(doc(db, `users/${userId}/habits`, habitId));
+export async function deleteHabit(habitId, userId) {
+  try {
+    await deleteDoc(doc(db, `users/${userId}/habits`, habitId));
+    console.log("Habit deleted successfully");
+  } catch (error) {
+    console.error("Error deleting habit:", error);
+  }
 }

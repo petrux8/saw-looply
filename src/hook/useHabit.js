@@ -6,13 +6,13 @@ import * as service from "../service/habitService";
 
 export function useHabits({ currentDate }) {
   const { currentUser } = useFirebaseAuth();
-  const [habits, setHabits] = useState([]);habits
+  const [habits, setHabits] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!currentUser && !currentDate) return;
 
-    const q = service.getHabits(currentUser.uid, currentDate);
+    const q = service.getHabitsOfDay(currentUser.uid, currentDate);
     const unsubscribe = onSnapshot(q, (snapshot) => {
       setHabits(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
       setLoading(false);

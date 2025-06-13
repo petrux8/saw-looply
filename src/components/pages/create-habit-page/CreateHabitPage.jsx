@@ -4,6 +4,8 @@ import FrequencyPicker from "./FrequencyPicker";
 import { useFirebaseAuth } from "../../../context/FirebaseAuthContext";
 import HabitTypeFields from "./HabitTypeFields";
 import { createHabit, getHabitByName } from "../../../service/habitService";
+import { getDocs } from "firebase/firestore";
+import { useParams } from "react-router-dom";
 
 const initialHabitState = {
   name: "",
@@ -28,9 +30,26 @@ function reducer(state, action) {
 const CreateHabitPage = () => {
   const [state, dispatch] = useReducer(reducer, initialHabitState);
   const { currentUser } = useFirebaseAuth();
+  const { habitId } = useParams();
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  // useEffect(() => {
+  //   if (!habitId) return;
+
+  //   setLoading(true);
+  //   getHabitById(habitId)
+  //     .then((habitData) => {
+  //       dispatch({ name: "reset", value: habitData });
+  //       setLoading(false);
+  //     })
+  //     .catch((err) => {
+  //       setError("Failed to load habit");
+  //       setLoading(false);
+  //     });
+  // }, [habitId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,8 +66,7 @@ const CreateHabitPage = () => {
         return;
       }
 
-      const snapshot = getHabitByName(currentUser.uid, name);
-
+      const snapshot = await getDocs(getHabitByName(currentUser.uid, name));
       if (!snapshot.empty) {
         setError("Habit name must be unique.");
         return;

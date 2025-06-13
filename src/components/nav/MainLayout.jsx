@@ -5,8 +5,8 @@ import { useState } from "react";
 import { useMediaQuery } from "@mui/material";
 
 const MainLayout = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const isSmallerThanMd = useMediaQuery("(max-width: 767.98px)");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const isSmallerThanLg = useMediaQuery("(max-width: 991.98px)");
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -20,14 +20,14 @@ const MainLayout = () => {
           isSidebarOpen={isSidebarOpen}
           onToggle={toggleSidebar}
           closeSidebar={() => setIsSidebarOpen(false)}
-          isSmallerThanMd={isSmallerThanMd}
+          isSmallerThanLg={isSmallerThanLg}
         />
         <div
           className="flex-grow-1 p-3 bg-light"
           style={{
             padding: "1rem",
             overflowY: "auto",
-            marginLeft: isSmallerThanMd ? 0 : "350px",
+            marginLeft: isSmallerThanLg ? 0 : "350px",
           }}
         >
           <Outlet />

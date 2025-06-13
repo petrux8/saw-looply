@@ -7,7 +7,7 @@ import { parseISODateAsLocal } from "../util/parseDate";
 
 export function useHabitsHistory({ currentDate }) {
   const { currentUser } = useFirebaseAuth();
-  const [habitsHistory, setHabitsHistory] = useState([]);
+  const [habits, setHabits] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -17,11 +17,11 @@ export function useHabitsHistory({ currentDate }) {
     const targetYear = currentDate.getFullYear();
     const targetPrefix = `${targetYear}-${String(targetMonth + 1).padStart(2, "0")}`;
 
-    const q = service.getHabitsHistory(currentUser.uid);
+    const q = service.getHabits(currentUser.uid);
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      setHabitsHistory(
+      setHabits(
         snapshot.docs.map((doc) => {
-          const { name, history, type, target, days } = doc.data();
+          const { history} = doc.data();
 
           const filteredHistory = Object.keys(history)
             .filter((key) => key.startsWith(targetPrefix)) // Filtra le chiavi che iniziano con il prefisso
@@ -30,7 +30,7 @@ export function useHabitsHistory({ currentDate }) {
               return filteredHistory;
             }, {});     
 
-          return { id: doc.id, name, type, target, days, history: filteredHistory };
+          return { id: doc.id, ...doc.data() , history: filteredHistory };
         })
       );
       setLoading(false);
@@ -39,5 +39,5 @@ export function useHabitsHistory({ currentDate }) {
     return unsubscribe;
   }, [currentUser, currentDate]);
 
-  return { habitsHistory, loading };
+  return { habits, loading };
 }

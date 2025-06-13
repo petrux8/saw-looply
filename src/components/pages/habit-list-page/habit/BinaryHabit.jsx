@@ -1,7 +1,7 @@
 const BinaryHabit = ({ habit, onToggleCompletion, dateString }) => {
 
   return (
-    <div className="d-flex align-items-center mb-3">
+    <div className="d-flex align-items-center">
       <input
         type="checkbox"
         className="form-check-input me-3"

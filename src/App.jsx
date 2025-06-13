@@ -33,6 +33,7 @@ function App() {
           <Route index element={<HabitListPage />} />
           <Route path="create" element={<CreateHabit />} />
           <Route path="stats" element={<StatsPage />} />
+          <Route path="update/:habitId" element={<CreateHabit />} />
         </Route>
       </Routes>
     </Router>
