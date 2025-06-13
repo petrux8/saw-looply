@@ -8,7 +8,12 @@ const linkList = [
   { name: "Statistics", path: "/stats" },
 ];
 
-export default function Sidebar({ isSidebarOpen, onToggle, closeSidebar }) {
+export default function Sidebar({
+  isSidebarOpen,
+  onToggle,
+  closeSidebar,
+  isSmallerThanMd,
+}) {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
 
@@ -17,7 +22,6 @@ export default function Sidebar({ isSidebarOpen, onToggle, closeSidebar }) {
       await logout();
       navigate("/auth");
     } catch (error) {
-      console.log("QUa?");
       console.error("Errore durante il logout:", error);
       setError("Logout fallito. Riprova.");
     }
@@ -30,20 +34,16 @@ export default function Sidebar({ isSidebarOpen, onToggle, closeSidebar }) {
 
   return (
     <>
-      {/* Sidebar */}
       <div
-        className={`d-flex flex-column border-end border-2 vh-100 p-3 bg-white ${
-          isSidebarOpen ? "position-fixed top-0 start-0 vh-100" : "d-none"
-        } d-md-flex position-static`}
-        style={{ width: "350px", zIndex: "1050" }}
+        className={`d-flex flex-column bg-white vh-100 p-3 position-fixed ${
+          isSmallerThanMd ? (isSidebarOpen ? "top-0 start-0" : "d-none") : ""
+        }`}
+        style={{
+          width: "350px",
+          height: "100vh",
+          zIndex: isSmallerThanMd ? "1050" : "1030",
+        }}
       >
-        <button
-          className="btn btn-outline-primary d-md-none m-3"
-          onClick={onToggle}
-        >
-          ☰
-        </button>
-        {/* Logo */}
         <div className="text-center mb-4">
           <img
             src="/logo.png"
@@ -57,24 +57,21 @@ export default function Sidebar({ isSidebarOpen, onToggle, closeSidebar }) {
           />
         </div>
 
-        {/* Link principali */}
         <div className="mb-auto">
           {linkList.map((link) => (
             <NavLink
               key={link.path}
               to={link.path}
               className={({ isActive }) => getLinkClass(isActive)}
-              onClick={closeSidebar} // Chiudi la sidebar quando un link è cliccato
+              onClick={closeSidebar}
             >
               {link.name}
             </NavLink>
           ))}
         </div>
 
-        {/* Messaggio di errore */}
         {error && <p className="text-danger">{error}</p>}
 
-        {/* Pulsante di Logout */}
         <button
           className="btn btn-outline-danger mt-3 w-100"
           onClick={handleLogout}
@@ -82,9 +79,7 @@ export default function Sidebar({ isSidebarOpen, onToggle, closeSidebar }) {
           Logout
         </button>
       </div>
-
-      {/* Overlay per dispositivi mobili */}
-      {isSidebarOpen && (
+      {isSidebarOpen && isSmallerThanMd && (
         <div
           className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50"
           onClick={onToggle}

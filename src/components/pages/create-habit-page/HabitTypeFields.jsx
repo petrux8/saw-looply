@@ -1,8 +1,7 @@
 const HabitTypeFields = ({ state, dispatch }) => {
-  const { habitType, habitTarget, habitUnit, habitStartRange, habitEndRange } =
-    state;
+  const { type, target, unit, startRange, endRange } = state;
 
-  if (habitType === "quantitative") {
+  if (type === "quantitative") {
     return (
       <div className="row mb-3">
         <div className="col-md-6">
@@ -10,11 +9,10 @@ const HabitTypeFields = ({ state, dispatch }) => {
           <input
             type="number"
             className="form-control"
-            value={habitTarget}
+            value={target}
             onChange={(e) =>
-              dispatch({ name: "habitTarget", value: e.target.value })
+              dispatch({ name: "target", value: e.target.value })
             }
-            required
           />
         </div>
         <div className="col-md-6">
@@ -22,18 +20,15 @@ const HabitTypeFields = ({ state, dispatch }) => {
           <input
             type="text"
             className="form-control"
-            value={habitUnit}
-            onChange={(e) =>
-              dispatch({ name: "habitUnit", value: e.target.value })
-            }
-            required
+            value={unit}
+            onChange={(e) => dispatch({ name: "unit", value: e.target.value })}
           />
         </div>
       </div>
     );
   }
 
-  if (habitType === "rating") {
+  if (type === "rating") {
     return (
       <div className="row mb-3">
         <label className="form-label">Range</label>
@@ -41,9 +36,9 @@ const HabitTypeFields = ({ state, dispatch }) => {
           <input
             type="number"
             className="form-control"
-            value={habitStartRange}
+            value={startRange}
             onChange={(e) =>
-              dispatch({ name: "habitStartRange", value: e.target.value })
+              dispatch({ name: "startRange", value: e.target.value })
             }
             required
           />
@@ -52,9 +47,9 @@ const HabitTypeFields = ({ state, dispatch }) => {
           <input
             type="number"
             className="form-control"
-            value={habitEndRange}
+            value={endRange}
             onChange={(e) =>
-              dispatch({ name: "habitEndRange", value: e.target.value })
+              dispatch({ name: "endRange", value: e.target.value })
             }
             required
           />

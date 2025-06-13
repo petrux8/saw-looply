@@ -2,49 +2,58 @@
 import { db } from "../firebase/firebase";
 import {
   collection,
-  addDoc,
   doc,
   updateDoc,
   deleteDoc,
-  serverTimestamp,
   query,
   where,
-  and,
   or,
   setDoc,
 } from "firebase/firestore";
 
-const col = collection(db, "habits");
+const getHabitsCollectionRef = (userId) =>
+  collection(db, `users/${userId}/habits`);
 
-export const getHabitsQuery = (userId, currentDate) => {
+export const getHabits = (userId, currentDate) => {
   const weekDay = currentDate.toLocaleDateString("en-GB", {
     weekday: "short",
   });
+  const habitsCol = getHabitsCollectionRef(userId);
 
   const q = query(
-    collection(db, "habits"),
-    and(
-      where("userId", "==", userId),
-      or(
-        where("repeat", "==", "daily"),
-        where("days", "array-contains", weekDay),
-      )
-    )
+    habitsCol,
+    or(where("freq", "==", "daily"), where("days", "array-contains", weekDay))
   );
 
   return q;
 };
 
+export const getHabitByName = (userId, habitName) => {
+  const habitsCol = getHabitsCollectionRef(userId);
+
+  const q = query(habitsCol, where("name", "==", habitName));
+
+  return q;
+};
+
+export const getHabitsHistory = (userId) => {
+  const habitsCol = getHabitsCollectionRef(userId);
+
+  const q = query(habitsCol);
+
+  return q;
+};
+
 export async function createHabit(userId, data) {
-  await setDoc(doc(db, "habits", data.id), {
+  await setDoc(doc(db, `users/${userId}/habits`, data.id), {
     ...data,
   });
 }
 
 export function updateHabit(habitId, updates) {
-  return updateDoc(doc(db, "habits", habitId), updates);
+  return updateDoc(doc(db, `users/${userId}/habits`, habitId), updates);
 }
 
 export function deleteHabit(habitId) {
-  return deleteDoc(doc(db, "habits", habitId));
+  return deleteDoc(doc(db, `users/${userId}/habits`, habitId));
 }

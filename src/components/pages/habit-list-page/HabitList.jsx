@@ -2,17 +2,17 @@ import React, { useState, useEffect, useMemo } from "react";
 import BinaryHabit from "./habit/BinaryHabit";
 import RatingHabit from "./habit/RatingHabit";
 import QuantityHabit from "./habit/QuantityHabit";
-import { useHabits } from "../../hook/useHabit";
-import { updateHabit } from "../../service/habitService";
+import { useHabits } from "../../../hook/useHabit";
+import { updateHabit } from "../../../service/habitService";
 
 export default function HabitList({ currentDate }) {
   const { habits, loading } = useHabits({ currentDate });
 
-  const date = useMemo(() =>  currentDate.toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "numeric",
-    year: "numeric",
-  }), [currentDate])
+  const dateString = useMemo(
+    () =>
+      currentDate.toISOString().split("T")[0],
+    [currentDate]
+  );
 
   if (loading) return <p>Loading...</p>;
 
@@ -32,11 +32,11 @@ export default function HabitList({ currentDate }) {
                     updateHabit(habit.id, {
                       history: {
                         ...habit.history,
-                        [date]: !habit.history[date],
+                        [dateString]: !habit.history[dateString],
                       },
                     })
                   }
-                  currentDate={date}
+                  dateString={dateString}
                 />
               );
               break;
@@ -49,11 +49,11 @@ export default function HabitList({ currentDate }) {
                     updateHabit(habit.id, {
                       history: {
                         ...habit.history,
-                        [date]: value,
+                        [dateString]: value,
                       },
                     })
                   }
-                  currentDate={date}
+                  dateString={dateString}
                 />
               );
               break;
@@ -66,11 +66,11 @@ export default function HabitList({ currentDate }) {
                     updateHabit(habit.id, {
                       history: {
                         ...habit.history,
-                        [date]: value,
+                        [dateString]: value,
                       },
                     })
                   }
-                  currentDate={date}
+                  dateString={dateString}
                 />
               );
               break;
@@ -92,3 +92,4 @@ export default function HabitList({ currentDate }) {
     </>
   );
 }
+

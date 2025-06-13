@@ -1,7 +1,7 @@
 import { ButtonGroup, ToggleButton, ToggleButtonGroup } from "react-bootstrap";
 
 const FrequencyPicker = ({ state, dispatch }) => {
-  const { habitFreq, habitDays } = state;
+  const { freq, days } = state;
 
   const daysRadios = [
     { name: "Mon", value: "Mon" },
@@ -14,8 +14,7 @@ const FrequencyPicker = ({ state, dispatch }) => {
   ];
 
   const handleDaysToggle = (value) => {
-    console.log(value);
-    dispatch({ name: "habitDays", value: value });
+    dispatch({ name: "days", value: value });
   };
 
   return (
@@ -25,9 +24,9 @@ const FrequencyPicker = ({ state, dispatch }) => {
         <div className="col-md-4">
           <select
             className="form-select"
-            value={habitFreq}
+            value={freq}
             onChange={(e) =>
-              dispatch({ name: "habitFreq", value: e.target.value })
+              dispatch({ name: "freq", value: e.target.value })
             }
           >
             <option value="daily">Daily</option>
@@ -35,27 +34,27 @@ const FrequencyPicker = ({ state, dispatch }) => {
           </select>
         </div>
       </div>
-      {habitFreq === "weekly" && (
+      {freq === "weekly" && (
         <div className="row mb-3">
           <label className="form-label">Days</label>
           <ToggleButtonGroup
             className="col-md-4"
             type="checkbox"
-            value={habitDays}
+            value={days}
             onChange={handleDaysToggle}
           >
-            {daysRadios.map((days, i) => (
+            {daysRadios.map((daysRadio, i) => (
               <ToggleButton
                 key={i}
                 id={`daysRadio-${i}`}
                 type="radio"
                 variant="outline-primary"
                 name="daysRadio"
-                value={days.value}
-                checked={habitDays.includes(days.value)}
-                onChange={() => handleDaysToggle(days.value)}
+                value={daysRadio.value}
+                checked={days.includes(daysRadio.value)}
+                onChange={() => handleDaysToggle(daysRadio.value)}
               >
-                {days.name}
+                {daysRadio.name}
               </ToggleButton>
             ))}
           </ToggleButtonGroup>

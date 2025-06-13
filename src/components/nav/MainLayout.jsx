@@ -1,24 +1,16 @@
 import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useMediaQuery } from "@mui/material";
 
 const MainLayout = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const isSmallerThanMd = useMediaQuery("(max-width: 767.98px)");
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
-
-  const handleResize = () => {
-    setIsMobile(window.innerWidth <= 768);
-  };
-
-  useEffect(() => {
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   return (
     <div className="d-flex flex-column vh-100">
@@ -28,8 +20,16 @@ const MainLayout = () => {
           isSidebarOpen={isSidebarOpen}
           onToggle={toggleSidebar}
           closeSidebar={() => setIsSidebarOpen(false)}
+          isSmallerThanMd={isSmallerThanMd}
         />
-        <div className="flex-grow-1 p-3">
+        <div
+          className="flex-grow-1 p-3 bg-light"
+          style={{
+            padding: "1rem",
+            overflowY: "auto",
+            marginLeft: isSmallerThanMd ? 0 : "350px",
+          }}
+        >
           <Outlet />
         </div>
       </div>

@@ -1,6 +1,7 @@
 import React from "react";
 
-const RatingHabit = ({ habit, onUpdateRating, currentDate }) => {
+const RatingHabit = ({ habit, onUpdateRating, dateString }) => {
+  
   return (
     <div className="mb-3">
       <div className="d-flex align-items-center">
@@ -10,8 +11,8 @@ const RatingHabit = ({ habit, onUpdateRating, currentDate }) => {
           min={habit.startRange}
           max={habit.endRange}
           value={
-            habit.history[currentDate]
-              ? habit.history[currentDate]
+            habit.history[dateString]
+              ? habit.history[dateString]
               : habit.startRange
           }
           onChange={(e) => onUpdateRating(e.target.value)}
@@ -22,8 +23,8 @@ const RatingHabit = ({ habit, onUpdateRating, currentDate }) => {
           min={habit.startRange}
           max={habit.endRange}
           value={
-            habit.history[currentDate]
-              ? habit.history[currentDate]
+            habit.history[dateString]
+              ? habit.history[dateString]
               : habit.startRange
           }
           onChange={(e) => onUpdateRating(e.target.value)}

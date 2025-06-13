@@ -1,8 +1,6 @@
 import {
   createUserWithEmailAndPassword,
-  GoogleAuthProvider,
   signInWithEmailAndPassword,
-  signInWithPopup,
   sendPasswordResetEmail,
   sendEmailVerification,
   updatePassword,
@@ -16,11 +14,6 @@ export const doCreateUserWithEmailAndPassword = async (email, password) => {
 
 export const doSignInWithEmailAndPassword = async (email, password) => {
   return signInWithEmailAndPassword(auth, email, password);
-};
-
-export const doSignInWithGoogle = async () => {
-  const provider = new GoogleAuthProvider();
-  return signInWithPopup(auth, provider);
 };
 
 export const doSignOut = () => {

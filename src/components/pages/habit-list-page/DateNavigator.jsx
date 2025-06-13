@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const DateNavigator = ({currentDate, setCurrentDate}) => {
+const DateNavigator = ({ currentDate, setCurrentDate }) => {
 
   const handlePreviousDay = () => {
     setCurrentDate((prevDate) => {
@@ -36,7 +36,6 @@ const DateNavigator = ({currentDate, setCurrentDate}) => {
             })}
           </p>
         </div>
-        {/* Navigation Buttons */}
         <div>
           <button
             className="btn btn-outline-danger me-2"

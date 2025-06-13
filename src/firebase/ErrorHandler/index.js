@@ -272,7 +272,10 @@ export const generateFirebaseAuthAlertMessage = (error) => {
     case "auth/internal-error":
       return "Internal error. Please try again.";
 
+    case "auth/missing-email":
+      return "Missing email. Please try again.";
+
     default:
-      return "Oops! Something went wrong. Please try again later.";
+      return "Oops! Something went wrong. Please try again later. " + error.code;
   }
 };

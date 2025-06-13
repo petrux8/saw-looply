@@ -22,6 +22,7 @@ const db = initializeFirestore(app, {
     tabManager: persistentMultipleTabManager(),
   }),
 });
+
 const auth = getAuth(app);
 
 export { db, auth, app };

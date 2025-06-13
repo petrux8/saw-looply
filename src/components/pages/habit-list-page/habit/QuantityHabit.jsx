@@ -1,6 +1,6 @@
 import React from "react";
 
-const QuantityHabit = ({ habit, onUpdateProgress, currentDate }) => {
+const QuantityHabit = ({ habit, onUpdateProgress, dateString }) => {
   return (
     <div className="mb-3">
       <div className="d-flex align-items-center">
@@ -8,8 +8,7 @@ const QuantityHabit = ({ habit, onUpdateProgress, currentDate }) => {
           type="number"
           className="form-control"
           min="0"
-          max={habit.target}
-          value={habit.history[currentDate] ? habit.history[currentDate] : 0}
+          value={habit.history[dateString] ? habit.history[dateString] : 0}
           onChange={(e) => onUpdateProgress(e.target.value)}
         />
       </div>
