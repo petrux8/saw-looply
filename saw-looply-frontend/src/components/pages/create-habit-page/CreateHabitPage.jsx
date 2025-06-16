@@ -6,6 +6,7 @@ import HabitTypeFields from "./HabitTypeFields";
 import { createHabit, getHabitByName } from "../../../service/habitService";
 import { getDocs } from "firebase/firestore";
 import { useParams } from "react-router-dom";
+import { useHabits } from "../../../context/HabitContext";
 
 const initialHabitState = {
   name: "",
@@ -36,6 +37,7 @@ const CreateHabitPage = () => {
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Logica vecchia per update
   // useEffect(() => {
   //   if (!habitId) return;
 

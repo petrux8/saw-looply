@@ -1,6 +1,7 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import { auth } from "../firebase/firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import { subscribeUserToPush } from "../notification";
 
 export const FirebaseAuthContext = createContext();
 
@@ -12,7 +13,13 @@ export const FirebaseAuthProvider = ({ children }) => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
       setLoading(false);
+      if (user) {
+        if ("serviceWorker" in navigator) {
+          subscribeUserToPush(user.uid);
+        }
+      }
     });
+
     return () => unsubscribe();
   }, []);
 
@@ -21,10 +28,6 @@ export const FirebaseAuthProvider = ({ children }) => {
       {!loading && children}
     </FirebaseAuthContext.Provider>
   );
-};
-
-export const useAuth = () => {
-  return useContext(FirebaseAuthContext);
 };
 
 export function useFirebaseAuth() {

@@ -9,10 +9,44 @@ import {
   where,
   or,
   setDoc,
+  onSnapshot,
 } from "firebase/firestore";
 
 const getHabitsCollectionRef = (userId) =>
   collection(db, `users/${userId}/habits`);
+
+const getHabitsDocumentRef = (userId, habitId) =>
+  doc(db, `users/${userId}/habits`, habitId);
+
+export const subscribeToHabits = (userId, callback) => {
+  const habitsRef = getHabitsCollectionRef(userId);
+  const q = query(habitsRef);
+
+  const unsubscribe = onSnapshot(q, (snapshot) => {
+    const habits = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    callback(habits);
+  });
+
+  return unsubscribe;
+};
+
+//Crea
+export const createHabit = async (userId, habit) => {
+  const habitDocRef = getHabitsDocumentRef(userId, habit.id)
+  await setDoc(habitDocRef, { ...habit });
+}
+
+//Update
+export const updateHabit = async (userId, habitId, updates) => {
+  const habitDocRef = getHabitsDocumentRef(userId, habitId)
+  return updateDoc(habitDocRef, updates);
+}
+
+//Delete
+export const deleteHabit = async (userId, habitId) => {
+  const habitDocRef = getHabitsDocumentRef(userId, habitId)
+  await deleteDoc(habitDocRef);
+}
 
 export const getHabitsOfDay = (userId, currentDate) => {
   const weekDay = currentDate.toLocaleDateString("en-GB", {
@@ -48,23 +82,4 @@ export async function getHabit(userId, data) {
   await setDoc(doc(db, `users/${userId}/habits`, data.id), {
     ...data,
   });
-}
-
-export async function createHabit(userId, data) {
-  await setDoc(doc(db, `users/${userId}/habits`, data.id), {
-    ...data,
-  });
-}
-
-export function updateHabit(habitId, userId, updates) {
-  return updateDoc(doc(db, `users/${userId}/habits`, habitId), updates);
-}
-
-export async function deleteHabit(habitId, userId) {
-  try {
-    await deleteDoc(doc(db, `users/${userId}/habits`, habitId));
-    console.log("Habit deleted successfully");
-  } catch (error) {
-    console.error("Error deleting habit:", error);
-  }
 }

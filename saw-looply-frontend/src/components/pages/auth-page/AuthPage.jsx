@@ -2,7 +2,6 @@ import {
   doCreateUserWithEmailAndPassword,
   doSignInWithEmailAndPassword,
 } from "../../../firebase/auth";
-import { useNavigate } from "react-router-dom";
 import Alert from "../../Alert";
 import { useState } from "react";
 import { FirebaseError } from "firebase/app";
@@ -44,7 +43,6 @@ export default function AuthPage() {
   const handleRegister = async (e) => {
     e.preventDefault();
     setError("");
-    setSuccess("");
 
     if (!username) {
       setError("Username is required!");
@@ -52,6 +50,7 @@ export default function AuthPage() {
     }
 
     try {
+      console.log(email);
       const userCredential = await doCreateUserWithEmailAndPassword(
         email,
         password

@@ -4,7 +4,6 @@ import { logout } from "../../firebase/auth";
 
 const linkList = [
   { name: "Habits List", path: "/" },
-  { name: "Create", path: "/create" },
   { name: "Statistics", path: "/stats" },
 ];
 

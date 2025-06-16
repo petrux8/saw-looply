@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useMemo } from "react";
 import BinaryHabit from "./habit/BinaryHabit";
 import QuantityHabit from "./habit/QuantityHabit";
-import { useHabits } from "../../../hook/useHabit";
-import { deleteHabit, updateHabit } from "../../../service/habitService";
-import { useFirebaseAuth } from "../../../context/FirebaseAuthContext";
+import { useHabitsOfDay } from "../../../hook/useHabitsOfDay";
 import { MdEdit, MdDelete } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import { useHabits } from "../../../context/HabitContext";
 
 export default function HabitList({ currentDate }) {
-  const { habits, loading } = useHabits({ currentDate });
-  const { currentUser } = useFirebaseAuth();
+  const { habitsOfDay, loading } = useHabitsOfDay({ currentDate });
+  const { removeHabit, editHabit } = useHabits();
+
   const navigate = useNavigate();
 
   const dateString = useMemo(
@@ -21,9 +21,9 @@ export default function HabitList({ currentDate }) {
 
   return (
     <>
-      {habits.length === 0 && <p>Non hai ancora creato nessun habit.</p>}
+      {habitsOfDay.length === 0 && <p>Non hai ancora creato nessun habit.</p>}
       <ul className="list-group">
-        {habits.map((habit) => {
+        {habitsOfDay.map((habit) => {
           let habitComponent = null;
           switch (habit.type) {
             case "binary":
@@ -32,7 +32,7 @@ export default function HabitList({ currentDate }) {
                   key={habit.id}
                   habit={habit}
                   onToggleCompletion={() =>
-                    updateHabit(habit.id, currentUser.uid, {
+                    editHabit(habit.id, {
                       history: {
                         ...habit.history,
                         [dateString]: !habit.history[dateString],
@@ -49,7 +49,7 @@ export default function HabitList({ currentDate }) {
                   key={habit.id}
                   habit={habit}
                   onUpdateProgress={(value) =>
-                    updateHabit(habit.id, currentUser.uid, {
+                    editHabit(habit.id, {
                       history: {
                         ...habit.history,
                         [dateString]: value,
@@ -71,8 +71,14 @@ export default function HabitList({ currentDate }) {
             >
               <div className="d-flex align-items-center gap-1">
                 <div className="row">
-                  <MdEdit style={{ cursor: "pointer" }} onClick={() => navigate(`/update/${habit.id}`)}/>
-                  <MdDelete style={{ cursor: "pointer" }} onClick={() => deleteHabit(habit.id, currentUser.id)}/>
+                  <MdEdit
+                    style={{ cursor: "pointer" }}
+                    onClick={() => navigate(`/update/${habit.id}`)}
+                  />
+                  <MdDelete
+                    style={{ cursor: "pointer" }}
+                    onClick={() => removeHabit(habit.id)}
+                  />
                 </div>
 
                 <h5 className="mb-0">{habit.name}</h5>

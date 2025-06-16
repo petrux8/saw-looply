@@ -6,7 +6,7 @@ import MyLineChart from "./MyLineChart";
 
 export default function StatsPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const { habits } = useHabitsHistory({ currentDate });
+  const { habitsHistoryFiltered } = useHabitsHistory({ currentDate });
 
   const monthDays = useMemo(() => {
     const year = currentDate.getFullYear();
@@ -61,8 +61,8 @@ export default function StatsPage() {
         </div>
       </div>
       
-      {habits.length === 0 && <p>Non hai ancora creato nessun habit.</p>}
-      {habits && habits.map((habit, i) => (
+      {habitsHistoryFiltered.length === 0 && <p>Non hai ancora creato nessun habit.</p>}
+      {habitsHistoryFiltered && habitsHistoryFiltered.map((habit, i) => (
         <div key={i}>
           <h5>
             {habit.name}
