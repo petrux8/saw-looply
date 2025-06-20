@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useHabits } from "../../context/HabitContext";
 import HabitSearchBar from "./HabitSearchBar";
-import { MdEdit, MdDelete } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
 import HabitCard from "./HabitCard";
 import { useHabitModals } from "../../hook/useHabitModals";
 import HabitModal from "../../components/HabitModal";
@@ -122,13 +120,22 @@ export default function HabitsLibraryPage() {
       </div>
 
       <div className="row mt-4">
-        {filteredHabits.length == 0 ? <NoHabit text={"No habit found!"} hasAddHabit={true} onClick={() => openHabitModal()}/> : filteredHabits.map((habit, i) => (
-          <HabitCard
-            onEditHabit={openHabitModal}
-            onRemoveHabit={openRemoveModal}
-            habit={habit}
+        {filteredHabits.length == 0 ? (
+          <NoHabit
+            text={"No habit found!"}
+            hasAddHabit={true}
+            onClick={() => openHabitModal()}
           />
-        ))}
+        ) : (
+          filteredHabits.map((habit, i) => (
+            <HabitCard
+              key={i}
+              onEditHabit={openHabitModal}
+              onRemoveHabit={openRemoveModal}
+              habit={habit}
+            />
+          ))
+        )}
       </div>
 
       <HabitModal

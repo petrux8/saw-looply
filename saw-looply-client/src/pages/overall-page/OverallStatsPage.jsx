@@ -3,7 +3,7 @@ import MyDatePicker from "./MyDatePicker";
 import { ToggleButton, ButtonGroup } from "react-bootstrap";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
-import { useHabitsHistory } from "../../hook/useHabitHistory";
+import { useHistory } from "../../hook/useHistory";
 import LineGraph from "./LineGraph";
 
 const OverallStatsPage = () => {
@@ -12,7 +12,7 @@ const OverallStatsPage = () => {
 
   const [period, setPeriod] = useState("month");
   const [startDate, setStartDate] = useState(dayjs().startOf("month"));
-  const { history, loading, minHabit, maxHabit } = useHabitsHistory({
+  const { history, loading, minHabit, maxHabit } = useHistory({
     startDate,
     period,
   });

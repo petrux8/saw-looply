@@ -9,9 +9,9 @@ import { useFirebaseAuth } from "./context/FirebaseAuthContext";
 
 import AuthPage from "./pages/auth-page/AuthPage";
 import HabitsSchedulePage from "./pages/habits-schedule-page/HabitsSchedulePage";
-import HabitDetailPage from "./pages/habits-list-page/HabitDetailPage";
 import OverallStatsPage from "./pages/overall-page/OverallStatsPage";
 import HabitsLibraryPage from "./pages/habits-list-page/HabitsLibraryPage";
+import HabitStatisticsPage from "./pages/habits-list-page/HabitStatisticsPage";
 
 function App() {
   const { currentUser } = useFirebaseAuth();
@@ -39,7 +39,7 @@ function App() {
           >
             <Route index element={<HabitsSchedulePage />} />
             <Route path="habits" element={<HabitsLibraryPage />} />
-            <Route path="habits/:id" element={<HabitDetailPage />} />
+            <Route path="habits/:id" element={<HabitStatisticsPage />} />
             <Route path="dashboard" element={<OverallStatsPage />} />
           </Route>
         </Routes>

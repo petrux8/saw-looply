@@ -85,12 +85,6 @@ export const getHistoryRange = async (userId, startDate, endDate) => {
     id: doc.id,
     habits: doc.data(),
   }));
-
-  // const results = querySnapshot.docs.map((doc) => ({
-  //   x: doc.id,
-  //   y: Object.keys(doc.data()).length,
-  // }));
-
   return results;
 };
 
