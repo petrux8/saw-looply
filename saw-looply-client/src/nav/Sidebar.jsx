@@ -1,6 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { logout } from "../firebase/auth";
+import OnlineStatusIndicator from "./OnlineStatusIndicator";
 
 const linkList = [
   { name: "Habits Schedule", path: "/" },
@@ -8,19 +9,19 @@ const linkList = [
   { name: "Habits Library", path: "/habits" },
 ];
 
-export default function Sidebar({
+const Sidebar = ({
   isSidebarOpen,
   onToggle,
   closeSidebar,
   isSmallerThanLg,
-}) {
+}) => {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
 
   const handleLogout = async () => {
     try {
       await logout();
-      navigate("/auth");
+      navigate("/login");
     } catch (error) {
       console.error("Errore durante il logout:", error);
       setError("Logout fallito. Riprova.");
@@ -56,6 +57,7 @@ export default function Sidebar({
             }}
           />
         </div>
+        <OnlineStatusIndicator />
 
         <div className="mb-auto p-3">
           {linkList.map((link) => (
@@ -87,4 +89,6 @@ export default function Sidebar({
       )}
     </>
   );
-}
+};
+
+export default Sidebar;

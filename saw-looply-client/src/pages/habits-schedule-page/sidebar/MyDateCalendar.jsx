@@ -6,7 +6,7 @@ import updateLocale from 'dayjs/plugin/updateLocale'
 import dayjs from "dayjs";
 import { PickersDay } from "@mui/x-date-pickers/PickersDay";
 
-function CustomPickersDay(props) {
+const CustomPickersDay = (props) => {
   const { day, selected, outsideCurrentMonth, ...other } = props;
 
   const isDisabled = dayjs(day).isAfter(dayjs());
@@ -29,7 +29,7 @@ function CustomPickersDay(props) {
 }
 
 
-export default function MyDateCalendar({ currentDate, setCurrentDate }) {
+const MyDateCalendar = ({ currentDate, setCurrentDate }) => {
   dayjs.extend(updateLocale);
   dayjs.updateLocale("en", {
     weekStart: 1,
@@ -51,3 +51,5 @@ export default function MyDateCalendar({ currentDate, setCurrentDate }) {
     </LocalizationProvider>
   );
 }
+
+export default MyDateCalendar;

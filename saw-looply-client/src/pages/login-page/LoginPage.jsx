@@ -2,21 +2,45 @@ import {
   doCreateUserWithEmailAndPassword,
   doSignInWithEmailAndPassword,
 } from "../../firebase/auth";
-import Alert from "../../components/Alert"
-import { useState } from "react";
+import Alert from "../../components/Alert";
+import { useState, useRef } from "react";
 import { FirebaseError } from "firebase/app";
 import { generateFirebaseAuthAlertMessage } from "../../firebase/ErrorHandler";
 import { IoEyeOffSharp, IoEyeSharp } from "react-icons/io5";
 import { db } from "../../firebase/firebase";
 import { doc, setDoc } from "firebase/firestore";
+import OfflineModal from "./OfflineModal";
 
-export default function AuthPage() {
+const LoginPage = () => {
   const [authType, setAuthType] = useState("login");
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isPswHidden, setPswHidden] = useState(true);
+  const [showOfflineModal, setShowOfflineModal] = useState(false);
+  const [countdown, setCountdown] = useState(10);
   const [error, setError] = useState("");
+  const timerRef = useRef(null);
+
+  const checkOnline = () => {
+    return navigator.onLine;
+  };
+
+  const startCountdown = () => {
+    setCountdown(10);
+    timerRef.current = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          if (checkOnline()) {
+            clearInterval(timerRef.current);
+            setShowOfflineModal(false);
+          }
+          return 10;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
 
   const handleAuthSwitch = () => {
     setAuthType(authType === "login" ? "register" : "login");
@@ -29,6 +53,11 @@ export default function AuthPage() {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
+    if (!checkOnline()) {
+      setShowOfflineModal(true);
+      startCountdown();
+      return;
+    }
 
     try {
       await doSignInWithEmailAndPassword(email, password);
@@ -43,6 +72,11 @@ export default function AuthPage() {
   const handleRegister = async (e) => {
     e.preventDefault();
     setError("");
+    if (!checkOnline()) {
+      setShowOfflineModal(true);
+      startCountdown();
+      return;
+    }
 
     if (!username) {
       setError("Username is required!");
@@ -68,6 +102,15 @@ export default function AuthPage() {
       } else {
         setError(err);
       }
+    }
+  };
+
+  const handleRetryClick = () => {
+    if (checkOnline()) {
+      clearInterval(timerRef.current);
+      setShowOfflineModal(false);
+    } else {
+      setCountdown(10);
     }
   };
 
@@ -168,6 +211,13 @@ export default function AuthPage() {
           </div>
         </div>
       </div>
+      <OfflineModal
+        show={showOfflineModal}
+        handleRetryClick={handleRetryClick}
+        countdown={countdown}
+      />
     </div>
   );
-}
+};
+
+export default LoginPage;

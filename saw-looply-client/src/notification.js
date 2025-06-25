@@ -1,11 +1,14 @@
-export const subscribeUserToPush = async (uid) => {
+export const subscribeUserToPush = async (uid, registration) => {
+  if (!registration) {
+    console.error("Service Worker not registrated");
+    return;
+  }
+
   await requestNotificationPermission();
   const response = await fetch("http://localhost:3000/vapidPublicKey");
   const vapidPublicKey = await response.text();
 
   const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
-
-  const registration = await registerServiceWorker()
 
   const subscription = await registration.pushManager.subscribe({
     userVisibleOnly: true,
@@ -40,16 +43,14 @@ function urlBase64ToUint8Array(base64String) {
 }
 
 export const registerServiceWorker = async () => {
-  if ("serviceWorker" in navigator) {
-    try {
-      const registration = await navigator.serviceWorker.register("/sw.js");
-      console.log("Service Worker registrato:", registration);
-      return registration;
-    } catch (error) {
-      console.error("Errore registrazione Service Worker:", error);
-    }
-  } else {
-    console.error("Service Worker non supportato.");
+  try {
+    const registration = await navigator.serviceWorker.register(
+      "/sw-custom.js"
+    );
+    console.log("Service Worker registrato:", registration);
+    return registration;
+  } catch (error) {
+    console.error("Errore registrazione Service Worker:", error);
   }
 };
 

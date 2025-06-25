@@ -1,13 +1,4 @@
-import React, { useEffect, useReducer } from "react";
-import { Form, ToggleButton, ToggleButtonGroup } from "react-bootstrap";
-
 const RemoveModal = ({ show, onClose, onDelete }) => {
-  //   const handleSave = () => {
-  //     onSave(state);
-  //     dispatch({ name: "reset", value: initialHabitState });
-  //     onClose();
-  //   };
-
   return (
     <div
       className={`modal fade ${show ? "show d-block" : ""}`}
@@ -37,11 +28,7 @@ const RemoveModal = ({ show, onClose, onDelete }) => {
             >
               Cancel
             </button>
-            <button
-              type="button"
-              className="btn btn-danger"
-              onClick={onDelete}
-            >
+            <button type="button" className="btn btn-danger" onClick={onDelete}>
               Delete
             </button>
           </div>

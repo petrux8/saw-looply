@@ -1,7 +1,7 @@
 import React from "react";
 import AddHabitButton from "./AddHabitButton";
 
-export default function NoHabit({ text, hasAddHabit = false, onClick }) {
+const NoHabit = ({ text, hasAddHabit = false, onClick }) => {
   return (
     <div className="text-center py-5">
       <h4 className="text-muted">{text}</h4>
@@ -10,3 +10,5 @@ export default function NoHabit({ text, hasAddHabit = false, onClick }) {
     </div>
   );
 }
+
+export default NoHabit;

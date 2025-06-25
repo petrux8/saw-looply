@@ -129,11 +129,11 @@ function Day(props) {
   );
 }
 
-export default function CalendarCard({
+const CalendarCard = ({
   selectedDays,
   startDate,
   setStartDate,
-}) {
+}) => {
   const handleMonthChange = (newMonth) => {
     setStartDate(dayjs(newMonth).startOf("month"));
   };
@@ -163,3 +163,5 @@ export default function CalendarCard({
     </LocalizationProvider>
   );
 }
+
+export default CalendarCard;

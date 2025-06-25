@@ -4,7 +4,7 @@ import HabitModal from "./HabitModal";
 import RemoveModal from "./RemoveModal";
 import { useHabits } from "../context/HabitContext";
 
-export default function HabitModals() {
+const HabitModals = () => {
   const {
     editHabit,
     removeHabit,
@@ -108,3 +108,5 @@ export default function HabitModals() {
     </>
   );
 }
+
+export default HabitModals;

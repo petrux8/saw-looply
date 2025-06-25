@@ -1,13 +1,13 @@
 import { GaugeContainer, Gauge, gaugeClasses } from "@mui/x-charts/Gauge";
 
-function DailyGauge({ percentage }) {
+const DailyGauge = ({ percentage }) => {
   return (
     <GaugeContainer
       style={{
         width: "80%",
         maxWidth: "300px",
         height: "auto",
-        aspectRatio: "1", // Gestito tramite CSS
+        aspectRatio: "1",
       }}
     >
       <Gauge

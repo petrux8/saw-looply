@@ -3,11 +3,11 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 
-export default function MyDatePicker({
+const MyDatePicker = ({
   type = "year",
   currentDate = dayjs(),
   setCurrentDate,
-}) {
+}) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       {type == "year" ? (
@@ -36,3 +36,5 @@ export default function MyDatePicker({
     </LocalizationProvider>
   );
 }
+
+export default MyDatePicker;

@@ -8,7 +8,7 @@ import RemoveModal from "../../components/RemoveModal";
 import Alert from "../../components/Alert";
 import NoHabit from "../../components/NoHabit";
 
-export default function HabitsLibraryPage() {
+const HabitsLibraryPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const { habits } = useHabits();
   const [filteredHabits, setFilteredHabits] = useState([]);
@@ -164,3 +164,5 @@ export default function HabitsLibraryPage() {
     </div>
   );
 }
+
+export default HabitsLibraryPage;

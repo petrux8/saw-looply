@@ -2,7 +2,7 @@ import React from "react";
 import { MdEdit, MdDelete } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
-export default function HabitCard({ habit, onEditHabit, onRemoveHabit }) {
+const HabitCard = ({ habit, onEditHabit, onRemoveHabit }) => {
   const navigate = useNavigate();
 
   return (
@@ -56,3 +56,5 @@ export default function HabitCard({ habit, onEditHabit, onRemoveHabit }) {
     </div>
   );
 }
+
+export default HabitCard;

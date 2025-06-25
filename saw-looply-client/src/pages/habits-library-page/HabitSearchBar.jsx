@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { InputGroup, FormControl, Button } from 'react-bootstrap';
 import { MdSearch } from 'react-icons/md';
 
-function HabitSearchBar({ value, onChange, onSubmit }) {
+const HabitSearchBar = ({ value, onChange, onSubmit }) => {
   const [isFocused, setIsFocused] = useState(false);
 
   return (

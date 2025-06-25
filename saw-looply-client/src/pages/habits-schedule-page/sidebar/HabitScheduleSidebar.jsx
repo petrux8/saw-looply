@@ -1,7 +1,7 @@
 import DailyGauge from "./DailyGauge";
 import MyDateCalendar from "./MyDateCalendar";
 
-export const HabitScheduleSidebar = ({
+const HabitScheduleSidebar = ({
   currentDate,
   setCurrentDate,
   percentToday,
@@ -31,3 +31,5 @@ export const HabitScheduleSidebar = ({
     </div>
   </div>
 );
+
+export default HabitScheduleSidebar;

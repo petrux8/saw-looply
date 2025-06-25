@@ -34,10 +34,8 @@ export const setHabitCompletion = async (userId, habitId, dayId) => {
   const daySnap = await getDoc(dayRef);
 
   if (!daySnap.exists()) {
-    // Documento non esiste ancora
-    await setDoc(dayRef, {
-      [habitId]: true,
-    });
+    // Documento non esiste ancora: scrivi con merge true
+    await setDoc(dayRef, { [habitId]: true }, { merge: true });
     return { completed: true };
   }
 
@@ -55,6 +53,19 @@ export const setHabitCompletion = async (userId, habitId, dayId) => {
       [habitId]: true,
     });
     return { completed: true };
+  }
+};
+
+export const ensureHistoryDayExists = async (userId, dayId) => {
+  const dayRef = getHistoryDocumentRef(userId, dayId);
+
+  try {
+    const daySnap = await getDoc(dayRef);
+    if (!daySnap.exists()) {
+      await setDoc(dayRef, {});
+    }
+  } catch (error) {
+    console.error("Error:", error);
   }
 };
 
@@ -92,10 +103,18 @@ export const subscribeToHabits = (userId, callback) => {
   const habitsRef = getHabitsCollectionRef(userId);
   const q = query(habitsRef);
 
-  const unsubscribe = onSnapshot(q, (snapshot) => {
-    const habits = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-    callback(habits);
-  });
+  const unsubscribe = onSnapshot(
+    q,
+    { includeMetadataChanges: true },
+    (snapshot) => {
+      const habits = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+        isSynced: !doc.metadata.hasPendingWrites,
+      }));
+      callback(habits);
+    }
+  );
 
   return unsubscribe;
 };
@@ -109,30 +128,45 @@ export const createHabit = async (userId, habit) => {
 //Update
 export const updateHabit = async (userId, habitId, updates) => {
   const habitDocRef = getHabitsDocumentRef(userId, habitId);
-  return updateDoc(habitDocRef, updates);
+  await updateDoc(habitDocRef, { ...updates, isSynced: false });
 };
 
 //Delete
 export const deleteHabit = async (userId, habitId) => {
   const habitDocRef = getHabitsDocumentRef(userId, habitId);
-  await deleteDoc(habitDocRef);
 
-  const dayRef = getHistoryCollectionRef(userId);
-  const daySnap = await getDocs(dayRef);
+  // Contrassegna l'habit come "isDeleted" se l'utente è offline
+  await updateDoc(habitDocRef, { isDeleted: true });
 
-  const batch = writeBatch(db); // Creazione di un batch
+  // Monitoraggio della sincronizzazione
+  onSnapshot(habitDocRef, async (docSnap) => {
+    if (!docSnap.metadata.hasPendingWrites) {
+      try {
+        // Elimina l'habit dal database
+        await deleteDoc(habitDocRef);
 
-  daySnap.forEach((docSnap) => {
-    const data = docSnap.data();
-    if (data[habitId]) {
-      const dayDocRef = getHistoryDocumentRef(userId, docSnap.id);
-      batch.update(dayDocRef, {
-        [habitId]: deleteField(),
-      });
+        // Elimina le dipendenze nella collezione "history"
+        const dayRef = getHistoryCollectionRef(userId);
+        const daySnap = await getDocs(dayRef);
+
+        const batch = writeBatch(db); // Creazione di un batch
+
+        daySnap.forEach((docSnap) => {
+          const data = docSnap.data();
+          if (data[habitId]) {
+            const dayDocRef = getHistoryDocumentRef(userId, docSnap.id);
+            batch.update(dayDocRef, {
+              [habitId]: deleteField(),
+            });
+          }
+        });
+
+        await batch.commit();
+      } catch (error) {
+        console.error(`Error:`, error);
+      }
     }
   });
-
-  await batch.commit(); // Esegue tutte le operazioni in batch
 };
 
 export const getHabitsOfDay = (userId, currentDate) => {

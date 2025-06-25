@@ -10,7 +10,7 @@ const Alert = ({ message, type, onClose, duration = null, fixed = false }) => {
     }
   }, [duration, onClose]);
 
-  if (!message) return null; // Non mostra nulla se non c'è un messaggio
+  if (!message) return null; 
 
   const alertType =
     type === "success"
@@ -29,7 +29,7 @@ const Alert = ({ message, type, onClose, duration = null, fixed = false }) => {
     <div
       className={alertClass}
       style={{
-        zIndex: 1055, // Valore superiore a quello della sidebar e degli altri elementi
+        zIndex: 1055, 
       }}
       role="alert"
     >

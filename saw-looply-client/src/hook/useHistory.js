@@ -4,7 +4,7 @@ import { useHabits } from "../context/HabitContext";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 
-export function useHistory({ startDate, period }) {
+export const useHistory = ({ startDate, period }) => {
   const { fetchHistoryRange, getHabitName } = useHabits();
   const [history, setHistory] = useState([]);
   const [minHabit, setMinHabit] = useState(null);
@@ -76,12 +76,12 @@ export function useHistory({ startDate, period }) {
           setMinHabit(getHabitName(minHabitId));
         }
 
-        setHistory(completeHistory); // Aggiorna lo stato
+        setHistory(completeHistory); 
       } catch (error) {
         console.error("Error fetching history range:", error);
-        setHistory([]); // Fallback in caso di errore
+        setHistory([]); 
       } finally {
-        setLoading(false); // Fine del caricamento
+        setLoading(false); 
       }
     };
 

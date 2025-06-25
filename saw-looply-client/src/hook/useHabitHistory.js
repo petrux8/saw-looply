@@ -4,7 +4,7 @@ import { useHabits } from "../context/HabitContext";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 
-export function useHabitHistory({ habit, startDate }) {
+export const useHabitHistory = ({ habit, startDate }) => {
   const { fetchHistoryRange } = useHabits();
   const [habitHistory, setHabitHistory] = useState([]);
   const [longestStreak, setLongestStreak] = useState(0);

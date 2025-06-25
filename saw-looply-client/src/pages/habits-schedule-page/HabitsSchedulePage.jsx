@@ -3,15 +3,17 @@ import DateNavigator from "./DateNavigator";
 import HabitList from "./HabitList";
 import HabitModal from "../../components/HabitModal";
 import Alert from "../../components/Alert";
-import { useHabitsOfDay } from "../../hook/useHabitsOfDay";
-import { useHabitModals } from "../../hook/useHabitModals";
-import { useHabits } from "../../context/HabitContext";
 import RemoveModal from "../../components/RemoveModal";
 import dayjs from "dayjs";
-import { HabitScheduleSidebar } from "./sidebar/HabitScheduleSidebar";
+import HabitScheduleSidebar from "./sidebar/HabitScheduleSidebar";
 import Loading from "../../components/Loading";
 import NoHabit from "../../components/NoHabit";
 import AddHabitButton from "../../components/AddHabitButton";
+import OfflineFallback from "../../components/OfflineFallback";
+import { useOnlineStatus } from "../../hook/useOnlineStatus";
+import { useHabitsOfDay } from "../../hook/useHabitsOfDay";
+import { useHabitModals } from "../../hook/useHabitModals";
+import { useHabits } from "../../context/HabitContext";
 
 const HabitsSchedulePage = () => {
   const {
@@ -48,6 +50,8 @@ const HabitsSchedulePage = () => {
     currentDate,
     isFuture,
   });
+
+  const { onlineStatus } = useOnlineStatus();
 
   useEffect(() => {
     if (!habitsOfDay) return;
@@ -111,7 +115,6 @@ const HabitsSchedulePage = () => {
           notifications: notifications,
           history: {},
         };
-
         addHabit(newHabit);
         setAlert({
           message: "Habit created successfully!",
@@ -133,68 +136,74 @@ const HabitsSchedulePage = () => {
   };
 
   return (
-      <div className="container mt-5">
-        <div className="row gx-3">
-          <div className="col-12 col-md-8 mb-3 bg-light">
-            <h1>Your Habits</h1>
-            <div className="d-flex justify-content-between align-items-center">
-              <DateNavigator
-                currentDate={currentDate}
-                setCurrentDate={setCurrentDate}
-              />
-              <AddHabitButton onClick={() => openHabitModal()} />
-            </div>
-            <div className="p-3">
-              {loading ? (
-                <Loading />
-              ) : habitsOfDay.length === 0 ? (
-                <NoHabit
-                  text={"No habits scheduled for today!"}
-                  hasAddHabit={false}
-                />
-              ) : (
-                <HabitList
-                  onEditHabit={openHabitModal}
-                  onRemoveHabit={openRemoveModal}
-                  habitsOfDay={habitsOfDay}
-                  historyOfDay={historyOfDay}
-                  onToggleHabit={handleToggleHabit}
-                  isFuture={isFuture}
-                />
-              )}
-            </div>
+    <div className="container mt-5">
+      <div className="row gx-3">
+        <div className="col-12 col-md-8 mb-3 bg-light">
+          <h1>Your Habits</h1>
+          <div className="d-flex justify-content-between align-items-center">
+            <DateNavigator
+              currentDate={currentDate}
+              setCurrentDate={setCurrentDate}
+            />
+            <AddHabitButton onClick={() => openHabitModal()} />
           </div>
-          <HabitScheduleSidebar
-            currentDate={currentDate}
-            setCurrentDate={setCurrentDate}
-            percentToday={percentToday}
-          />
+          <div className="p-3">
+            {loading ? (
+              <Loading />
+            ) : habitsOfDay.length === 0 ? (
+              <NoHabit
+                text={"No habits scheduled for today!"}
+                hasAddHabit={false}
+              />
+            ) : !historyOfDay && !onlineStatus ? (
+              <OfflineFallback
+                text={
+                  "Unable to load habits for this day because you are offline."
+                }
+              />
+            ) : (
+              <HabitList
+                onEditHabit={openHabitModal}
+                onRemoveHabit={openRemoveModal}
+                habitsOfDay={habitsOfDay}
+                historyOfDay={historyOfDay}
+                onToggleHabit={handleToggleHabit}
+                isFuture={isFuture}
+              />
+            )}
+          </div>
         </div>
-
-        <HabitModal
-          show={showHabitModal}
-          habit={editingHabit}
-          onClose={closeHabitModal}
-          onSave={handleSaveHabit}
-        />
-
-        <RemoveModal
-          show={showRemoveModal}
-          onClose={closeRemoveModal}
-          onDelete={() => {
-            removeHabit(removingHabit);
-            closeRemoveModal();
-          }}
-        />
-
-        <Alert
-          message={alert.message}
-          type={alert.type}
-          fixed={alert.fixed}
-          duration={3000}
-          onClose={() => setAlert({ message: "", type: "", fixed: false })}
+        <HabitScheduleSidebar
+          currentDate={currentDate}
+          setCurrentDate={setCurrentDate}
+          percentToday={percentToday}
         />
       </div>
+
+      <HabitModal
+        show={showHabitModal}
+        habit={editingHabit}
+        onClose={closeHabitModal}
+        onSave={handleSaveHabit}
+      />
+
+      <RemoveModal
+        show={showRemoveModal}
+        onClose={closeRemoveModal}
+        onDelete={() => {
+          removeHabit(removingHabit);
+          closeRemoveModal();
+        }}
+      />
+
+      <Alert
+        message={alert.message}
+        type={alert.type}
+        fixed={alert.fixed}
+        duration={3000}
+        onClose={() => setAlert({ message: "", type: "", fixed: false })}
+      />
+    </div>
   );
 };
 

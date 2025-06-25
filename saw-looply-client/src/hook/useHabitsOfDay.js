@@ -11,7 +11,8 @@ export const useHabitsOfDay = ({ currentDate, isFuture }) => {
 
   useEffect(() => {
     if (!currentDate || !habits) return;
-    setHistoryOfDay({})
+    setHistoryOfDay({});
+    setLoading(true);
 
     const weekDay = dayjs(currentDate).format("ddd");
 
@@ -32,13 +33,16 @@ export const useHabitsOfDay = ({ currentDate, isFuture }) => {
     let unsubscribe = null;
 
     if (!isFuture) {
-      unsubscribe = subscribeHistory(dayId, (history) => {
-        setHistoryOfDay(history);
-      });
+      try {
+        unsubscribe = subscribeHistory(dayId, (history) => {
+          setHistoryOfDay(history);
+        });
+      } catch (err) {
+        console.log("Errore");
+      }
     }
 
     setLoading(false);
-    console.log(historyOfDay)
 
     return () => {
       if (unsubscribe) {

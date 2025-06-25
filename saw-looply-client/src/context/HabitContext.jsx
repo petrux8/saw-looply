@@ -23,8 +23,8 @@ export const HabitProvider = ({ children, userId }) => {
       return;
     }
 
-    const unsubscribe = subscribeToHabits(userId, (habits) => {
-      setHabits(habits);
+    const unsubscribe = subscribeToHabits(userId, (habitsSnapshot) => {
+      setHabits(habitsSnapshot);
       setLoading(false);
     });
 
@@ -45,7 +45,7 @@ export const HabitProvider = ({ children, userId }) => {
 
   const getHabitName = (habitId) => {
     return habits.filter((habit) => habit.id == habitId)[0].name;
-  }
+  };
 
   const isHabitNameUnique = async (habitName) => {
     return await checkHabitName(userId, habitName);
@@ -75,7 +75,7 @@ export const HabitProvider = ({ children, userId }) => {
         toggleCompletion,
         subscribeHistory,
         fetchHistoryRange,
-        getHabitName
+        getHabitName,
       }}
     >
       {!loading && children}

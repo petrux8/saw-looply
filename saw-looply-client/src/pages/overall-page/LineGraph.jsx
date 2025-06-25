@@ -1,7 +1,7 @@
 import React from "react";
 import ReactApexChart from "react-apexcharts";
 
-function LineGraph({ data = [], type }) {
+const LineGraph = ({ data = [], type }) => {
   const maxValue = Math.max(...data[0].data.map((d) => d.y)) || 1;
 
   const options = {
