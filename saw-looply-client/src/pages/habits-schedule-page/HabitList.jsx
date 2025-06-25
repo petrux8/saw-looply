@@ -66,28 +66,30 @@ const HabitList = ({
                       className="text-primary"
                     />
                   )}
-                  <Dropdown>
-                    <Dropdown.Toggle
-                      as="div"
-                      className="no-caret"
-                      style={{
-                        cursor: "pointer",
-                      }}
-                    >
-                      <MdMoreVert size={20} className="text-dark" />
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu>
-                      <Dropdown.Item onClick={() => onEditHabit(habit)}>
-                        <MdEdit className="me-2 text-primary" /> Edit
-                      </Dropdown.Item>
-                      <Dropdown.Item onClick={() => onRemoveHabit(habit.id)}>
-                        <MdDelete className="me-2 text-danger" /> Delete
-                      </Dropdown.Item>
-                      <Dropdown.Item as={Link} to={`/habits/${habit.id}`}>
-                        <MdInfo className="me-2 text-info" /> Details
-                      </Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
+                  {!habit.isDeleted && (
+                    <Dropdown>
+                      <Dropdown.Toggle
+                        as="div"
+                        className="no-caret"
+                        style={{
+                          cursor: "pointer",
+                        }}
+                      >
+                        <MdMoreVert size={20} className="text-dark" />
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <Dropdown.Item onClick={() => onEditHabit(habit)}>
+                          <MdEdit className="me-2 text-primary" /> Edit
+                        </Dropdown.Item>
+                        <Dropdown.Item onClick={() => onRemoveHabit(habit.id)}>
+                          <MdDelete className="me-2 text-danger" /> Delete
+                        </Dropdown.Item>
+                        <Dropdown.Item as={Link} to={`/habits/${habit.id}`}>
+                          <MdInfo className="me-2 text-info" /> Details
+                        </Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  )}
                 </div>
               </div>
             </div>
@@ -96,6 +98,6 @@ const HabitList = ({
       ))}
     </ul>
   );
-}
+};
 
 export default HabitList;

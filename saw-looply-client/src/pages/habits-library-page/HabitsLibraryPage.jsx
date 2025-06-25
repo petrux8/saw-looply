@@ -7,6 +7,8 @@ import HabitModal from "../../components/HabitModal";
 import RemoveModal from "../../components/RemoveModal";
 import Alert from "../../components/Alert";
 import NoHabit from "../../components/NoHabit";
+import AddHabitButton from "../../components/AddHabitButton";
+import AddCard from "./AddCard";
 
 const HabitsLibraryPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -127,14 +129,16 @@ const HabitsLibraryPage = () => {
             onClick={() => openHabitModal()}
           />
         ) : (
-          filteredHabits.map((habit, i) => (
-            <HabitCard
-              key={i}
-              onEditHabit={openHabitModal}
-              onRemoveHabit={openRemoveModal}
-              habit={habit}
-            />
-          ))
+          <><AddCard onClick={() => openHabitModal()}/>
+            {filteredHabits.map((habit, i) => (
+              <HabitCard
+                key={i}
+                onEditHabit={openHabitModal}
+                onRemoveHabit={openRemoveModal}
+                habit={habit}
+              />
+            ))}
+          </>
         )}
       </div>
 
@@ -163,6 +167,6 @@ const HabitsLibraryPage = () => {
       />
     </div>
   );
-}
+};
 
 export default HabitsLibraryPage;
