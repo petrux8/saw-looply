@@ -21,7 +21,6 @@ const CustomPickersDay = (props) => {
       sx={{
         ...(isDisabled && {
           color: "gray",
-          pointerEvents: "none",
         }),
       }}
     />

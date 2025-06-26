@@ -31,7 +31,6 @@ const HabitStatisticsPage = () => {
       <h1 className="mb-4">{habit.name} Statistics</h1>
       {onlineStatus ? (
         <div className="row">
-          {console.log(onlineStatus)}
           {/* Calendario */}
           <div className="col-lg-8 col-md-12 mb-4">
             <div className="p-4 bg-white rounded shadow-sm">

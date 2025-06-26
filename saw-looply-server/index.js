@@ -174,7 +174,7 @@ async function checkAndSendScheduledNotifications() {
   }
 }
 
-cron.schedule("* * * * *", () => {
+cron.schedule("0 9,12,15,18 * * *", () => {
   console.log("Eseguo il task schedulato per inviare notifiche");
   checkAndSendScheduledNotifications();
 });

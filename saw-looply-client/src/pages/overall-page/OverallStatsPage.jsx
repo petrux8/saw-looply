@@ -62,7 +62,6 @@ const OverallStatsPage = () => {
             </div>
           </div>
         </div>
-        {history.length === 0 && <p>Nothing to show</p>}
         {loading && (
           <div
             className="d-flex justify-content-center align-items-center"
@@ -85,9 +84,8 @@ const OverallStatsPage = () => {
               {/* Colonna per le card */}
               <div className="col-lg-4 col-12">
                 <div className="row">
-                  {maxHabit && minHabit ? (
+                  {maxHabit && minHabit && (
                     <>
-                      {" "}
                       <div className="col-6 col-md-12 mb-4">
                         <div className="card shadow p-3">
                           <h5>Most completed Habit</h5>
@@ -100,14 +98,7 @@ const OverallStatsPage = () => {
                           <p>{minHabit}</p>
                         </div>
                       </div>
-                    </>
-                  ) : (
-                    <div className="col-6 col-md-12">
-                      <div className="card shadow p-3">
-                        <h5>Nothing to show</h5>
-                      </div>
-                    </div>
-                  )}
+                    </>)}
                 </div>
               </div>
             </div>

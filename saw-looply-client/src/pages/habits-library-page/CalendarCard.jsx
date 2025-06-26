@@ -13,25 +13,30 @@ dayjs.updateLocale("en", {
 });
 
 const StyledDateCalendar = styled(DateCalendar, {
-  shouldForwardProp: (prop) => prop !== "isValueSelected",
-})(({ theme, isValueSelected }) => ({
+  shouldForwardProp: (prop) =>
+    prop !== "isValueSelected" && prop !== "isValueFuture",
+})(({ theme, isValueSelected, isValueFuture }) => ({
   "&.MuiDateCalendar-root": {
-    margin: "5px",
-    width: "90vw",
     maxWidth: "800px",
     minWidth: "350px",
+    margin: "0 auto",
+    padding: "0",
     height: "auto",
     minHeight: "400px",
     "& .MuiPickersDay-root.Mui-selected": {
       backgroundColor: isValueSelected ? theme.palette.primary.main : "white",
-      color: isValueSelected ? "white" : "black",
+      color: isValueSelected
+        ? "white"
+        : isValueFuture
+        ? theme.palette.text.disabled
+        : "black",
     },
 
     [theme.breakpoints.up("sm")]: {
       width: "70vw",
     },
     [theme.breakpoints.up("md")]: {
-      width: "600px",
+      width: "0px",
     },
 
     "& .MuiPickersCalendarHeader-root": {
@@ -129,16 +134,13 @@ function Day(props) {
   );
 }
 
-const CalendarCard = ({
-  selectedDays,
-  startDate,
-  setStartDate,
-}) => {
+const CalendarCard = ({ selectedDays, startDate, setStartDate }) => {
   const handleMonthChange = (newMonth) => {
     setStartDate(dayjs(newMonth).startOf("month"));
   };
 
   const isValueSelected = selectedDays.includes(startDate.format("YYYY-MM-DD"));
+  const isValueFuture = dayjs(startDate).isAfter(dayjs());
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -146,6 +148,7 @@ const CalendarCard = ({
         disableHighlightToday
         value={startDate}
         isValueSelected={isValueSelected}
+        isValueFuture={isValueFuture}
         sx={{
           "& .MuiPickersDay-root": {
             pointerEvents: "none",
@@ -162,6 +165,6 @@ const CalendarCard = ({
       />
     </LocalizationProvider>
   );
-}
+};
 
 export default CalendarCard;

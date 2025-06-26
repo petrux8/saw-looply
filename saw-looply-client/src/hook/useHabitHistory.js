@@ -27,10 +27,6 @@ export const useHabitHistory = ({ habit, startDate }) => {
 
         const rawHistory = await fetchHistoryRange(startDate, endDate);
 
-        // const filteredHistory = rawHistory
-        //   .filter((day) => day.habits[id])
-        //   .map((day) => day.id);
-
         const filteredHistory = [];
         let longestStreak = 0;
         let currentStreak = 0;

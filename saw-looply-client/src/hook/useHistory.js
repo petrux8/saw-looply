@@ -18,6 +18,8 @@ export const useHistory = ({ startDate, period }) => {
     if (!startDate || !period) return;
 
     setLoading(true);
+    setMinHabit(null);
+    setMaxHabit(null);
 
     const fetchData = async () => {
       try {
@@ -71,17 +73,24 @@ export const useHistory = ({ startDate, period }) => {
         if (maxHabitId != null) {
           setMaxHabit(getHabitName(maxHabitId));
         }
+        else{
+          setMaxHabit(null);
+        }
 
         if (minHabitId != null) {
           setMinHabit(getHabitName(minHabitId));
         }
+        else{
+          setMinHabit(null);
+        }
 
-        setHistory(completeHistory); 
+
+        setHistory(completeHistory);
       } catch (error) {
         console.error("Error fetching history range:", error);
-        setHistory([]); 
+        setHistory([]);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
@@ -89,4 +98,4 @@ export const useHistory = ({ startDate, period }) => {
   }, [startDate, period]);
 
   return { history, loading, maxHabit, minHabit };
-}
+};
