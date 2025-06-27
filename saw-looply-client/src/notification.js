@@ -5,7 +5,7 @@ export const subscribeUserToPush = async (uid, registration) => {
   }
 
   await requestNotificationPermission();
-  const response = await fetch("http://localhost:3000/vapidPublicKey");
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/vapidPublicKey`);
   const vapidPublicKey = await response.text();
 
   const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
@@ -16,7 +16,7 @@ export const subscribeUserToPush = async (uid, registration) => {
   });
 
   // Invia la subscription al backend
-  await fetch("http://localhost:3000/subscribe", {
+  await fetch(`${import.meta.env.VITE_API_URL}/subscribe`, {
     method: "POST",
     body: JSON.stringify({ uid, subscription }),
     headers: {
