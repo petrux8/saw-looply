@@ -11,7 +11,6 @@ const DateNavigator = ({ currentDate, setCurrentDate }) => {
 
   return (
     <div className="d-flex justify-content-between align-items-center">
-      {/* Date Section */}
       <div className="d-flex align-items-center">
         <div className="me-3">
           <h5 className="mb-0">{dayjs(currentDate).format("dddd")}</h5>

@@ -98,8 +98,6 @@ app.post("/send-notification", async (req, res) => {
       JSON.stringify(notificationPayload)
     );
 
-    console.log("inviata?");
-
     res.status(200).json({ message: "Notifications sent successfully!" });
   } catch (error) {
     console.error("Error sending notifications:", error);
@@ -148,7 +146,6 @@ async function checkAndSendScheduledNotifications() {
 
       habitSnapshot.forEach(async (habitDoc) => {
         if(habitDoc.data().history[todayKey] == true) return;
-        // Costruisci payload
         const payload = JSON.stringify({
           title: "Habit Tracker Reminder",
           body: habitDoc.data().name,
@@ -174,7 +171,13 @@ async function checkAndSendScheduledNotifications() {
   }
 }
 
-cron.schedule("0 9,12,15,18 * * *", () => {
+// cron.schedule("0 9,12,15,18 * * *", () => {
+//   console.log("Eseguo il task schedulato per inviare notifiche");
+//   checkAndSendScheduledNotifications();
+// });
+
+//per tessting notifiche push
+cron.schedule("* * * * *", () => {
   console.log("Eseguo il task schedulato per inviare notifiche");
   checkAndSendScheduledNotifications();
 });

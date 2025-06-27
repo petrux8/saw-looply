@@ -73,15 +73,12 @@ const OverallStatsPage = () => {
         {!loading && (
           <div className="container my-4">
             <div className="row">
-              {/* Colonna per il grafico */}
               <div className="col-lg-8 col-12 mb-4 mb-lg-0">
                 <LineGraph
                   type={period}
                   data={[{ name: "Completion Count", data: history }]}
                 />
               </div>
-
-              {/* Colonna per le card */}
               <div className="col-lg-4 col-12">
                 <div className="row">
                   {maxHabit && minHabit && (

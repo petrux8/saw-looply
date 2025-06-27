@@ -1,4 +1,3 @@
-// src/features/habits/hooks/useHabits.js
 import { useState, useEffect } from "react";
 import { useHabits } from "../context/HabitContext";
 import dayjs from "dayjs";

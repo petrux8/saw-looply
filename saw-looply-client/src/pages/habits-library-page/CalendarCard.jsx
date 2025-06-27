@@ -33,7 +33,7 @@ const StyledDateCalendar = styled(DateCalendar, {
     },
 
     [theme.breakpoints.up("sm")]: {
-      width: "70vw",
+      width: "0px",
     },
     [theme.breakpoints.up("md")]: {
       width: "0px",

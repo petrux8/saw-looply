@@ -1,4 +1,3 @@
-// src/features/habits/services/habitService.js
 import { db } from "../firebase/firebase";
 import {
   collection,
@@ -34,7 +33,6 @@ export const setHabitCompletion = async (userId, habitId, dayId) => {
   const daySnap = await getDoc(dayRef);
 
   if (!daySnap.exists()) {
-    // Documento non esiste ancora: scrivi con merge true
     await setDoc(dayRef, { [habitId]: true }, { merge: true });
     return { completed: true };
   }
@@ -42,13 +40,13 @@ export const setHabitCompletion = async (userId, habitId, dayId) => {
   const data = daySnap.data();
 
   if (data[habitId]) {
-    // Habit già completato -> togli completamento
+    // Habit già completato -> tolgo completamento
     await updateDoc(dayRef, {
       [habitId]: deleteField(),
     });
     return { completed: false };
   } else {
-    // Habit non completato -> aggiungi completamento
+    // Habit non completato -> aggiungo completamento
     await updateDoc(dayRef, {
       [habitId]: true,
     });
@@ -135,21 +133,20 @@ export const updateHabit = async (userId, habitId, updates) => {
 export const deleteHabit = async (userId, habitId) => {
   const habitDocRef = getHabitsDocumentRef(userId, habitId);
 
-  // Contrassegna l'habit come "isDeleted" se l'utente è offline
+  // Contrassegno l'habit come "isDeleted" se l'utente è offline
   await updateDoc(habitDocRef, { isDeleted: true });
 
   // Monitoraggio della sincronizzazione
   onSnapshot(habitDocRef, async (docSnap) => {
     if (!docSnap.metadata.hasPendingWrites) {
       try {
-        // Elimina l'habit dal database
         await deleteDoc(habitDocRef);
 
-        // Elimina le dipendenze nella collezione "history"
+        // Elimino le dipendenze nella collezione "history"
         const dayRef = getHistoryCollectionRef(userId);
         const daySnap = await getDocs(dayRef);
 
-        const batch = writeBatch(db); // Creazione di un batch
+        const batch = writeBatch(db); 
 
         daySnap.forEach((docSnap) => {
           const data = docSnap.data();

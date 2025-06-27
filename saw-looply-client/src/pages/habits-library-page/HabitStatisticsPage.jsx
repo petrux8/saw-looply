@@ -31,7 +31,6 @@ const HabitStatisticsPage = () => {
       <h1 className="mb-4">{habit.name} Statistics</h1>
       {onlineStatus ? (
         <div className="row">
-          {/* Calendario */}
           <div className="col-lg-8 col-md-12 mb-4">
             <div className="p-4 bg-white rounded shadow-sm">
               <h5 className="text-secondary mb-3">Habit Calendar</h5>
@@ -42,8 +41,6 @@ const HabitStatisticsPage = () => {
               />
             </div>
           </div>
-
-          {/* Sezione Statistiche */}
           <div className="col-lg-4 col-md-12 mb-4">
             <div className="p-4 bg-white rounded shadow-sm">
               <h5 className="text-secondary mb-3">Statistics</h5>
@@ -58,7 +55,7 @@ const HabitStatisticsPage = () => {
                   </tr>
                   <tr>
                     <td>
-                      <i className="bi bi-calendar-check text-success"></i> This
+                      <i className="bi bi-calendar-check text-success"></i> Completed this
                       Month
                     </td>
                     <td>{habitHistory.length} days</td>

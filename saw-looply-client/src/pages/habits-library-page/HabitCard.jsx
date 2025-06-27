@@ -49,7 +49,6 @@ const HabitCard = ({ habit, onEditHabit, onRemoveHabit }) => {
             </div>}
           </div>
 
-          {/* Frequency and Details Section */}
           <p className="text-muted mb-4">
             <small>
               Frequency: {habit.freq}
@@ -57,7 +56,6 @@ const HabitCard = ({ habit, onEditHabit, onRemoveHabit }) => {
             </small>
           </p>
 
-          {/* Button Section */}
           <button
             className={`btn mt-auto ${habit.isDeleted ? "btn-outline-secondary disabled" : "btn-outline-primary"} `}
             style={{ borderRadius: "8px" }}
