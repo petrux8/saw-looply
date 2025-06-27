@@ -94,3 +94,6 @@ service cloud.firestore {
 }
 ```
 
+## Credenziali di test
+Email: matildepetrucci2003@gmail.com
+Psw: 12345678
