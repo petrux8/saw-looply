@@ -11,6 +11,11 @@
 - **Statistiche**:
   - Statistiche generali per mese/anno
   - Statistiche specifiche per habit, tra cui: longest streak, giorni totali completati, progress bar.
+ 
+### Funzionalità offline
+- La gestione degli habit (creazione, modifica, eliminazione) è disponibile anche offline, al momento della riconnessione i dati saranno sincronizzati
+- La pianificazione degli habit e la possibilità di segnarli come completati è legata alla disponibilità o meno dei relativi dati in cache
+- Le statistiche sono disponibili solo online
 
 ## Requisiti
 
